@@ -1,0 +1,34 @@
+{
+  "name": "coffee-shop-manager-backend-nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sever.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --watch server.js ",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "LinhBui",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "mongoose": "^8.3.4",
+    "slugify": "^1.6.6"
+  },
+  "devDependencies": {
+    "compression": "^1.7.4",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.0"
+  }
+}
