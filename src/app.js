@@ -4,15 +4,17 @@ import compression from 'compression';
 import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-
+// init cors
+import cors from 'cors'
+import corsOptions from './helpers/corsOptions.js';
 //init db
 import { instanceMongodb } from './database/init.mongodb.js';
 import { countConnect, checkOverLoad } from './helpers/check.connect.js';
 
 dotenv.config();
 const app = express();
-// console.log(`Process:`, process.env);
-//init middlewares
+
+//init middlewares`
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(compression());
@@ -22,6 +24,9 @@ app.use(
         extended: true,
     })
 );
+
+// init cors
+app.use(cors(corsOptions));
 
 //init db
 

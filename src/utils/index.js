@@ -2,8 +2,8 @@
 
 import _ from 'lodash';
 
-const getInfoData = ({ fileds = [], object = {} }) => {
-  return _.pick(object, fileds);
+const getInfoData = ({ fields: fields = [], object = {} }) => {
+  return _.pick(object, fields);
 };
 
 // [ 'a', 'b'] => {a:1, b:1}
