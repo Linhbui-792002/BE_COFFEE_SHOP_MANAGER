@@ -5,7 +5,7 @@ const findAccountByUsername = async ({ username, select = { username: 1, passwor
     return await Account.findOne({ username }).select(select).lean();
 };
 
-const findAllAccounts = async ({ filter, select }) => {
+const getAllAccounts = async ({ filter, select }) => {
     const accounts = await Account.find(filter)
         .sort({ createdAt: -1 })
         .select(select)
@@ -14,4 +14,4 @@ const findAllAccounts = async ({ filter, select }) => {
     return accounts
 }
 
-export { findAccountByUsername, findAllAccounts }
+export { findAccountByUsername, getAllAccounts }
