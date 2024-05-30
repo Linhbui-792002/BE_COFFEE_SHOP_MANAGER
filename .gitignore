@@ -132,3 +132,4 @@ bun.lockb
 *.lockb
 /bun.lockb
 /*.lockb
+/package-lock.json

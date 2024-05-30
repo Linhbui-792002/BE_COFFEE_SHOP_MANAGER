@@ -8,10 +8,12 @@ class SuccessResponse {
     statusCode = StatusCodes.OK,
     reasonStatusCode = ReasonPhrases.OK,
     metadata = {},
+    options = {},
   }) {
     this.message = !message ? reasonStatusCode : message;
     this.status = statusCode;
     this.metadata = metadata;
+    this.options = options;
   }
 
   send(res, headers = {}) {
@@ -31,10 +33,9 @@ class CREATED extends SuccessResponse {
     statusCode = StatusCodes.CREATED,
     reasonStatusCode = ReasonPhrases.CREATED,
     metadata,
-    options = {},
   }) {
     super({ message, statusCode, reasonStatusCode, metadata });
-    this.options = options;
+
   }
 }
 
