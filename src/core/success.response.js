@@ -33,6 +33,7 @@ class CREATED extends SuccessResponse {
     statusCode = StatusCodes.CREATED,
     reasonStatusCode = ReasonPhrases.CREATED,
     metadata,
+
   }) {
     super({ message, statusCode, reasonStatusCode, metadata });
 
