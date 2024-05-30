@@ -11,7 +11,7 @@ const accountSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'Employee',
         },
-        email: {
+        username: {
             type: String,
             unique: true,
             trim: true,
@@ -27,6 +27,7 @@ const accountSchema = new Schema(
         role: {
             type: String,
             enum: ["Admin", "Employee"],
+            required: true,
         },
     },
     {
