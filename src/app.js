@@ -13,7 +13,6 @@ import corsOptions from './helpers/corsOptions.js';
 
 dotenv.config();
 const app = express();
-// console.log(`Process:`, process.env);
 //init middlewares
 app.use(morgan('dev'));
 app.use(helmet());

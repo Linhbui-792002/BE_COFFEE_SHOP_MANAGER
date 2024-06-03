@@ -38,6 +38,7 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
 
 const checkAdminRole = async (req, res, next) => {
     const role = req.account.role
+    console.log(role, 'role', role != ROLES.ADMIN)
     if (role != ROLES.ADMIN) {
         throw new ForbiddenError("Forbidden")
     }
@@ -58,7 +59,7 @@ const authentication = async (req, res, next) => {
     if (!accountId) throw new AuthFailureError('Invalid Request')
 
     const keyStore = await KeyTokenService.findByAccountId(accountId)
-    if (!keyStore) throw new NotFoundError('Not found keyStore')
+    if (!keyStore) throw new AuthFailureError('Login again')
 
     const refreshToken = req.body.refreshToken
     if (refreshToken) {
@@ -79,13 +80,13 @@ const authentication = async (req, res, next) => {
     if (!accessToken) throw new AuthFailureError('Invalid Request')
     try {
         const token = accessToken.includes("Bearer") ? accessToken.split(" ")[1] : accessToken;
-        console.log(token, 'token')
         const decodeAccount = JWT.verify(token, keyStore.publicKey, (err, decoded) => {
             if (err) throw new ForbiddenError("Forbidden")
             return decoded
         })
-
+        console.log(decodeAccount, 'decodeAccount');
         if (accountId != decodeAccount.accountId) throw new AuthFailureError('Invalid AccountId')
+        if (decodeAccount.status) throw new AuthFailureError('Account Blocked')
         req.keyStore = keyStore
         req.account = decodeAccount
         return next()

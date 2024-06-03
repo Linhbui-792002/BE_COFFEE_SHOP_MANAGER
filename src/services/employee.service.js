@@ -1,5 +1,5 @@
 import Employee from "../models/employee.model.js";
-import { changeStatusEmployee, getAllEmployees, getOneEmployee, updateEmployee } from "../repositories/employee.repo.js";
+import { changeStatusEmployee, getAllEmployees, getAllEmployeesNotExistAccount, getOneEmployee, updateEmployee } from "../repositories/employee.repo.js";
 
 class EmployeeService {
     static createEmployee = async ({
@@ -41,6 +41,11 @@ class EmployeeService {
     static getAllEmployeesDoing = async ({ filter = { status: true }, select = ['_id', 'firstName', 'lastName'] }) => {
         return await getAllEmployees({ filter, select })
     }
+
+    static getAllEmployeesNotExistAccount = async ({ accountId = null, filter = { status: true }, select = ['_id', 'firstName', 'lastName'] }) => {
+        return await getAllEmployeesNotExistAccount({ accountId, filter, select })
+    }
+
 
     static getInfoEmployees = async ({ employeeId }) => {
         return await getOneEmployee({ employeeId })
