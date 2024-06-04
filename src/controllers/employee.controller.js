@@ -40,6 +40,13 @@ class EmployeeController {
             metadata: await EmployeeService.getAllEmployeesDoing(req.query)
         }).send(res)
     }
+    static getAllEmployeesNotExistAccount = async (req, res, next) => {
+        const { accountId } = req.params
+        new OK({
+            message: "Get all employees has not account success",
+            metadata: await EmployeeService.getAllEmployeesNotExistAccount({ accountId, ...req.query })
+        }).send(res)
+    }
 
     static getInfoEmployee = async (req, res, next) => {
         const employeeId = req.params.id

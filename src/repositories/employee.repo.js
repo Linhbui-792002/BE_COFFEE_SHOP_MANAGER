@@ -1,7 +1,7 @@
-import { get } from "mongoose";
 import { BadRequestError } from "../core/error.response.js";
 import Employee from "../models/employee.model.js";
 import { getInfoData } from "../utils/index.js";
+import { findEmployeeInAccount } from "./account.repo.js";
 
 const findEmployeeById = async ({
     employeeId,
@@ -76,8 +76,23 @@ const getAllEmployees = async ({ filter, select }) => {
         .sort({ createdAt: -1 })
         .select(select)
         .lean();
-
     return employees;
+};
+
+const getAllEmployeesNotExistAccount = async ({ accountId, filter, select }) => {
+    const result = []
+    const employees = await Employee.find(filter)
+        .sort({ createdAt: -1 })
+        .select(select)
+        .lean();
+
+    await Promise.all(employees.map(async (employee) => {
+        const isExist = await findEmployeeInAccount(employee._id)
+        if (!isExist || accountId && String(isExist._id) === accountId) {
+            result.push(employee)
+        }
+    }))
+    return result;
 };
 
 const getOneEmployee = async ({ employeeId }) => {
@@ -93,5 +108,6 @@ export {
     updateEmployee,
     changeStatusEmployee,
     getAllEmployees,
-    getOneEmployee
+    getOneEmployee,
+    getAllEmployeesNotExistAccount
 };

@@ -16,6 +16,12 @@ class AccountController {
         }).send(res)
     }
 
+    static blockAccount = async (req, res, next) => {
+        new OK({
+            message: "Block account success",
+            metadata: await AccountService.blockAccount(req.body)
+        }).send(res)
+    }
     static resetPassword = async (req, res, next) => {
         new OK({
             message: "Reset password success",
@@ -24,9 +30,20 @@ class AccountController {
     }
 
     static getAllAccounts = async (req, res, next) => {
+        const result = await AccountService.getAllAccounts(req.query)
         new SuccessResponse({
             message: "Get all account success",
-            metadata: await AccountService.getAllAccounts(req.query)
+            metadata: result.metadata,
+            options: result.options
+        }).send(res)
+    }
+
+    static findOneAccount = async (req, res, next) => {
+        new SuccessResponse({
+            message: "Get one account success",
+            metadata: await AccountService.findOneAccount(
+                { accountId: req.params.accountId }
+            )
         }).send(res)
     }
 }

@@ -15,7 +15,6 @@ class AccessService {
         const { accountId, username, role } = account;
 
         if (keyStore.refreshTokensUsed.includes(refreshToken)) {
-            console.log(accountId, 'accountId', keyStore.refreshTokensUsed.includes(refreshToken))
             await KeyTokenService.deleteKeyByAccountId(accountId)
             throw new ForbiddenError('Something wrong happen !! pls relogin')
         }
@@ -26,7 +25,7 @@ class AccessService {
         if (!foundAccount) throw new AuthFailureError('shop not registered ')
 
         // create new token
-        const tokens = await createTokenPair({ accountId, username, role }, keyStore.publicKey, keyStore.privateKey)
+        const tokens = await createTokenPair({ accountId, username, role, status }, keyStore.publicKey, keyStore.privateKey)
 
         //updateTokens
         await keyStore.updateOne({
@@ -54,18 +53,17 @@ class AccessService {
         const foundAccount = await findAccountByUsername({ username })
         if (!foundAccount) throw new BadRequestError("Account not register")
 
-        console.log(foundAccount.password, password, 'password')
         const matchPassword = await bcrypt.compare(password, foundAccount.password)
 
         if (!matchPassword) throw new BadRequestError("Username or password invalid")
-        if (matchPassword.status) throw new BadRequestError("Account blocked")
+        if (foundAccount.status) throw new BadRequestError("Account blocked")
 
         const privateKey = crypto.randomBytes(64).toString('hex');
         const publicKey = crypto.randomBytes(64).toString('hex');
 
-        const { _id: accountId, role } = foundAccount
+        const { _id: accountId, role, status } = foundAccount
         const tokens = await createTokenPair(
-            { accountId, username, role },
+            { accountId, username, role, status },
             publicKey,
             privateKey
         );

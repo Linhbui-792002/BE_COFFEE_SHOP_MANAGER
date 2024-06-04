@@ -6,7 +6,7 @@ import KeyTokenService from './keyToken.service.js';
 import { getInfoData } from '../utils/index.js';
 import { findEmployeeById } from '../repositories/employee.repo.js';
 import { PASSWORD_RESET } from '../constants/index.js';
-import { getAllAccounts } from '../repositories/account.repo.js';
+import { findAccount, getAllAccounts } from '../repositories/account.repo.js';
 
 
 class AccountService {
@@ -50,9 +50,6 @@ class AccountService {
         const foundAccount = await Account.findOne({ _id: accountId }).lean();
         if (!foundAccount) throw new BadRequestError("Account not exits!")
 
-        const foundEmployee = await findEmployeeById({ employeeId })
-        if (!foundEmployee) throw new BadRequestError("Employee not exits")
-
         const updatedAccount = await Account.findByIdAndUpdate(
             accountId,
             {
@@ -62,6 +59,29 @@ class AccountService {
             },
             { new: true, lean: true }
         );
+
+        return {
+            account: getInfoData({
+                fields: ['_id', 'username', 'role', 'employeeId', 'status'],
+                object: updatedAccount
+            })
+        }
+    }
+
+    static blockAccount = async ({ accountId, status }) => {
+
+        const foundAccount = await Account.findOne({ _id: accountId }).lean();
+        if (!foundAccount) throw new BadRequestError("Account not exits!")
+
+        const updatedAccount = await Account.findByIdAndUpdate(
+            accountId,
+            {
+                status,
+            },
+            { new: true, lean: true }
+        );
+
+        await KeyTokenService.deleteKeyByAccountId(accountId)
 
         return {
             account: getInfoData({
@@ -98,6 +118,10 @@ class AccountService {
 
     static getAllAccounts = async ({ filter = {}, select = ['_id', 'username', 'role', 'status', 'createdAt', 'updatedAt'] }) => {
         return await getAllAccounts({ filter, select })
+    }
+
+    static findOneAccount = async ({ accountId, unSelect = ['password', '_v'] }) => {
+        return await findAccount({ accountId, unSelect })
     }
 }
 

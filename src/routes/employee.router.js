@@ -15,8 +15,8 @@ routerEmployee.get('/:id', asyncHandler(EmployeeController.getInfoEmployee));
 routerEmployee.use(asyncHandler(checkAdminRole))
 
 routerEmployee.get('/', asyncHandler(EmployeeController.getAllEmployees));
-routerEmployee.get('/employeeDoing', asyncHandler(EmployeeController.getAllEmployeesDoing));
-
+routerEmployee.get('/list/employeeDoing', asyncHandler(EmployeeController.getAllEmployeesDoing));
+routerEmployee.get('/list/employeeHasNotAccount/:accountId?', asyncHandler(EmployeeController.getAllEmployeesNotExistAccount));
 
 routerEmployee.post('/', asyncHandler(EmployeeController.createEmployee));
 routerEmployee.patch('/', asyncHandler(EmployeeController.updateEmployee));
