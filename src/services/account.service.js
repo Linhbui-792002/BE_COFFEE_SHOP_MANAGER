@@ -1,6 +1,6 @@
 'use strict';
 import bcrypt from 'bcrypt';
-import { BadRequestError } from "../core/error.response.js";
+import { BadRequestError, ConflictRequestError } from "../core/error.response.js";
 import Account from "../models/account.model.js";
 import KeyTokenService from './keyToken.service.js';
 import { getInfoData } from '../utils/index.js';
@@ -17,7 +17,7 @@ class AccountService {
     static createAccount = async ({ username, password, status, role, employeeId }) => {
 
         const foundAccount = await Account.findOne({ username }).lean();
-        if (foundAccount) throw new BadRequestError("Account already registered!")
+        if (foundAccount) throw new ConflictRequestError("Account already registered!")
 
         if (!_.isEmpty(employeeId)) {
             const foundEmployee = await findEmployeeById({ employeeId });

@@ -9,6 +9,14 @@ class ErrorResponse extends Error {
   }
 }
 
+class ServerError extends ErrorResponse {
+  constructor(
+    message = ReasonPhrases.INTERNAL_SERVER_ERROR,
+    statusCode = StatusCodes.INTERNAL_SERVER_ERROR
+  ) {
+    super(message, statusCode);
+  }
+}
 class ConflictRequestError extends ErrorResponse {
   constructor(
     message = ReasonPhrases.CONFLICT,
@@ -20,8 +28,8 @@ class ConflictRequestError extends ErrorResponse {
 
 class BadRequestError extends ErrorResponse {
   constructor(
-    message = ReasonPhrases.CONFLICT,
-    statusCode = StatusCodes.CONFLICT
+    message = ReasonPhrases.BAD_REQUEST,
+    statusCode = StatusCodes.BAD_REQUEST
   ) {
     super(message, statusCode);
   }
@@ -55,4 +63,4 @@ class ForbiddenError extends ErrorResponse {
   }
 }
 
-export { ConflictRequestError, BadRequestError, AuthFailureError, NotFoundError, ForbiddenError };
+export { ServerError, ConflictRequestError, BadRequestError, AuthFailureError, NotFoundError, ForbiddenError };
