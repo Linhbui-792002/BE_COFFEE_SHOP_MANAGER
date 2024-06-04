@@ -5,6 +5,7 @@ import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import cors from 'cors'
+import path from 'path';
 
 //init db
 import { instanceMongodb } from './database/init.mongodb.js';
@@ -30,6 +31,9 @@ app.use(cors(corsOptions));
 
 // checkOverLoad();
 
+// setUp public file
+app.use(express.static(path.resolve("./public")))
+app.use("/public", express.static(path.resolve("./public")))
 //init routers
 app.use('/', router);
 
