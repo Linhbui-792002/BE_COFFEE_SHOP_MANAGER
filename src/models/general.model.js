@@ -7,6 +7,11 @@ const COLLECTION_NAME = 'General';
 
 const generalSchema = new Schema(
     {
+        name: {
+            type: String,
+            required: true,
+            trim: true,
+        },
         email: {
             type: String,
             required: true,
@@ -24,8 +29,12 @@ const generalSchema = new Schema(
             trim: true,
         },
         logo: {
-            type: Boolean,
-            default: false
+            type: String,
+            trim: true,
+        },
+        favicon: {
+            type: String,
+            trim: true,
         },
     },
     {
