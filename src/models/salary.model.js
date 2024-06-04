@@ -32,6 +32,10 @@ const salarySchema = new Schema(
             type: Number,
             required: true
         },
+        hardSalary: {
+            type: Number,
+            required: true
+        },
         totalSalary: {
             type: Number,
             required: true
