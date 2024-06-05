@@ -16,7 +16,7 @@ dotenv.config();
 const app = express();
 //init middlewares
 app.use(morgan('dev'));
-app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(compression());
 app.use(express.json());
 app.use(
@@ -26,7 +26,7 @@ app.use(
 );
 
 
-app.use(cors(corsOptions));
+app.use(cors({ credentials: true }));
 //init db
 
 // checkOverLoad();

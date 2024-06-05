@@ -13,6 +13,10 @@ class UploadController {
             } else if (err) {
                 next(new BadRequestError(err));
             } else {
+                if (!req.files || req.files.length === 0) {
+                    next(new BadRequestError("No files uploaded"));
+                    return
+                }
                 const data = req.savedImages;
                 new OK({
                     message: "Update file success",

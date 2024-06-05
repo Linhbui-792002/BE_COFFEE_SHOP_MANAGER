@@ -29,6 +29,7 @@ const storage = multer.diskStorage({
         callback(null, path.join(rootDir, "/public/uploads"))
     },
     filename: (req, file, callback) => {
+        console.log(file, 'file');
         const extension = file.mimetype.replace("image/", "")
 
         if (!req.savedImages) {
@@ -38,13 +39,13 @@ const storage = multer.diskStorage({
         const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
 
         const url = `image_${uniqueSuffix}.${extension}`
-
+        console.log(url, 'url')
         req.savedImages = [...req.savedImages, path.join(url)];
         callback(null, url)
 
     }
 })
 
-const upload = multer({ storage, fileFilter }).array("images")
+const upload = multer({ storage, fileFilter }).array("file")
 
 export default upload
