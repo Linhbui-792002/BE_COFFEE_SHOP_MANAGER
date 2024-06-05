@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 dotenv.config()
-const whiteList = [process.env.CORS_WHITELIST_1, process.env.CORS_WHITELIST_2];
+const whiteList = [process.env.CORS_WHITELIST_1, process.env.CORS_WHITELIST_2, process.env.CORS_WHITELIST_3];
 
 const corsOptions = (req, callback) => {
   let options;

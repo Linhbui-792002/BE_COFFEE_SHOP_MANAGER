@@ -6,7 +6,7 @@ import { authentication } from '../auth/authUtils.js';
 import UploadController from '../controllers/upload.controller.js';
 
 const routerUpload = express.Router();
-routerUpload.use(asyncHandler(authentication))
+// routerUpload.use(asyncHandler(authentication))
 
 routerUpload.post("/", asyncHandler(UploadController.uploadFiles))
 
