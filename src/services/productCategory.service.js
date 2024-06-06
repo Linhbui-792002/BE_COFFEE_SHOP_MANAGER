@@ -1,11 +1,11 @@
 import { BadRequestError } from "../core/error.response.js";
 import ProductCategory from "../models/productCategory.model.js";
 
-class ProductCategoryServer {
+class ProductCategoryService {
   // Query
   static getAllProductCategory = async ({
     filter = {},
-    select = ["name", "createAt", "updateAt"],
+    select = ["name", "createdAt", "updatedAt"],
   }) => {
     return await ProductCategory.find(filter).select(select);
   };
@@ -34,4 +34,4 @@ class ProductCategoryServer {
   };
 }
 
-export default ProductCategoryServer;
+export default ProductCategoryService;
