@@ -12,10 +12,9 @@ class GeneralController {
   //QUERY//
 
   static getGeneral = async (req, res, next) => {
-    const generalId = req.params.id;
     new OK({
       message: "Get info general success",
-      metadata: await GeneralService.getGeneral({ generalId }),
+      metadata: await GeneralService.getGeneral(),
     }).send(res);
   };
 }
