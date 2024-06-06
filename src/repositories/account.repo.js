@@ -9,10 +9,10 @@ const findAccountByUsername = async ({ username, select = { username: 1, passwor
 };
 
 const findEmployeeInAccount = async (employeeId) => {
-    if (!employeeId) {
+    if (employeeId == "undefined" || employeeId == null) {
         return null;
     }
-    return await Account.findOne({ employeeId: new Types.ObjectId(employeeId) }).lean()
+    return await Account.findOne({ employeeId }).lean()
 }
 
 const getAllAccounts = async ({ filter, select }) => {
@@ -41,24 +41,26 @@ const getAllAccounts = async ({ filter, select }) => {
     return { metadata: result, options }
 }
 
-const getAllAccountsNotExistEmployee = async ({ employeeId, filter, select }) => {
-    const result = []
+const getAllAccountsNotExistEmployee = async ({ employeeId, filter = {}, select }) => {
+    let employeeFilter = { employeeId: null };
 
-    const accounts = await Account.find(filter)
+    if (employeeId != 'undefined') {
+        employeeFilter = {
+            $or: [
+                { employeeId: null },
+                { employeeId: employeeId }
+            ]
+        };
+    }
+    const mergedFilter = { ...filter, ...employeeFilter };
+    console.log(mergedFilter, 'mergedFilter');
+    const result = await Account.find(mergedFilter)
         .sort({ createdAt: -1 })
         .select(select)
         .lean();
-    await Promise.all(accounts.map(async (account) => {
-        const isExist = employeeId ? await findEmployeeInAccount(employeeId) : false
-        const isEmployee = (isExist && employeeId ? String(isExist?.employeeId) === employeeId : false)
-        if (!isExist || isEmployee) {
-            result.push(account)
-        }
-    }))
-
+    console.log(result, 'result');
     return result;
-
-}
+};
 
 const findAccount = async ({ accountId, unSelect }) => {
     return await Account.findById(accountId)
