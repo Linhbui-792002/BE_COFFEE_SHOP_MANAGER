@@ -1,7 +1,6 @@
 import { BadRequestError } from "../core/error.response.js"
 import { CREATED, OK, SuccessResponse } from "../core/success.response.js"
 import AccountService from "../services/account.service.js"
-import EmployeeService from "../services/employee.service.js"
 import SalaryService from "../services/salary.service.js"
 
 class SalaryController {
@@ -13,59 +12,38 @@ class SalaryController {
     * Step 3: create new salary
     */
     static createSalary = async (req, res, next) => {
-       
-        //create filter.
-        const query = {
-            "employeeId" : req.body.employeeId,
-            "workTerm" : req.body.workTerm
-        }
-        if(!query.employeeId){
-            throw new BadRequestError("Employee not found !!!");
-        }
-        if(!query.workTerm){
-            throw new BadRequestError("Work term is not found !!!");
-        }
-
-        //Step 1:
-        const isCreated = await SalaryService.getByFilter(query);
-        if(isCreated){
-            throw new BadRequestError("This employee salary already created for this term!");
-        }
-
-        //Step 2:
-        delete query.workTerm;
-        const employeeInfo = await EmployeeService.getInfoEmployees(query);
-        if(new Date(employeeInfo.createdAt).getTime() > new Date(req.body.workTerm).getTime()){
-            throw new BadRequestError(`Work term must be greater than month ${employeeInfo.createdAt.getMonth() + 1} year ${employeeInfo.createdAt.getFullYear()}`);
-        }
-
         new CREATED({
             message: "Created salary success",
-            metadata: await SalaryService.creatSalary(req.body),
+            metadata: await SalaryService.creatSalary(req.body, req.account.accountId),
         }).send(res)
     }
 
     static getSalary = async (req, res, next) => {
+        const {id} = req.params
         new OK({
             message: "Get salary success",
-            metadata: await SalaryService.getSalary(req.body.employeeId)
+            metadata: await SalaryService.getByFilter({_id: id})
+        }).send(res)
+    }
+
+    static getAllSalary = async (req, res, next) => {
+        new OK({
+            message: "Get salary success",
+            metadata: await SalaryService.getByFilter()
         }).send(res)
     }
 
     static updateSalary = async(req, res, next) => {
-        const id = req.body._id;
-        if(!id){
-            throw new BadRequestError("Missing data require: _id");
-        }
-
-        const salaryDetai = await SalaryService.getDetailSalary(id);
-        if(!salaryDetai){
-            throw new BadRequestError("Salary not found!");
-        }
-
-        new CREATED({
-            message: "Created salary success",
+        new OK({
+            message: "Edit salary success",
             metadata: await SalaryService.updateSalary(req.body),
+        }).send(res)
+    }
+
+    static getListEmployee = async(req, res, next) => {
+        new OK({
+            message: "Get list employee success",
+            metadata: await SalaryService.getAllEmployee(req.body),
         }).send(res)
     }
 }
