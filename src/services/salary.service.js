@@ -39,8 +39,8 @@ class SalaryService {
         return await getSalaryStatics(query);
     }
 
-    static updateSalary = async ({_id, workTerm, dateOff, deduction, bonusPercent, bonus, hardSalary, totalSalary}) => {
-        return await updateSalary({_id, workTerm, dateOff, deduction, bonusPercent, bonus, hardSalary, totalSalary});
+    static updateSalary = async ({salaryId, workTerm, dateOff, deduction, bonusPercent, bonus, hardSalary, totalSalary}) => {
+        return await updateSalary({_id: salaryId, workTerm, dateOff, deduction, bonusPercent, bonus, hardSalary, totalSalary});
     }
 
     static getAllEmployee = async({filter = { status: true }, select = ['_id', 'firstName', 'lastName', 'hardSalary'] }) => {
