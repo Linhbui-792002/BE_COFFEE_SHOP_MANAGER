@@ -4,110 +4,117 @@ import { getInfoData } from "../utils/index.js";
 import { findEmployeeInAccount } from "./account.repo.js";
 
 const findEmployeeById = async ({
-    employeeId,
-    select = {
-        firstName: 1,
-        lastName: 1,
-        gender: 1,
-        phoneNumber: 1,
-        hardSalary: 1,
-        address: 1,
-        status: 1,
-    },
+  employeeId,
+  select = {
+    firstName: 1,
+    lastName: 1,
+    gender: 1,
+    phoneNumber: 1,
+    hardSalary: 1,
+    address: 1,
+    status: 1,
+  },
 }) => {
-    const employee = await Employee.findOne({ _id: employeeId }).select(select).lean();
-    if (!employee) throw new BadRequestError("Employee not found !!!");
+  const employee = await Employee.findOne({ _id: employeeId })
+    .select(select)
+    .lean();
+  if (!employee) throw new BadRequestError("Employee not found !!!");
 
-    return employee
+  return employee;
 };
 
 const updateEmployee = async ({
-    employeeId,
-    firstName,
-    lastName,
-    dob,
-    gender,
-    phoneNumber,
-    hardSalary,
-    address,
-    status,
+  employeeId,
+  firstName,
+  lastName,
+  dob,
+  gender,
+  phoneNumber,
+  hardSalary,
+  address,
+  status,
 }) => {
-    await findEmployeeById({ employeeId })
+  await findEmployeeById({ employeeId });
 
-    const updatedEmployee = await Employee.findByIdAndUpdate(
-        employeeId,
-        {
-            firstName,
-            lastName,
-            dob,
-            gender,
-            phoneNumber,
-            hardSalary,
-            address,
-            status,
-        },
-        { new: true, lean: true }
-    );
+  const updatedEmployee = await Employee.findByIdAndUpdate(
+    employeeId,
+    {
+      firstName,
+      lastName,
+      dob,
+      gender,
+      phoneNumber,
+      hardSalary,
+      address,
+      status,
+    },
+    { new: true, lean: true }
+  );
 
-    return updatedEmployee;
+  return updatedEmployee;
 };
 
 const changeStatusEmployee = async ({ employeeId, status }) => {
-    const foundEmployee = await Employee.findOne({ _id: employeeId });
+  const foundEmployee = await Employee.findOne({ _id: employeeId });
 
-    if (!foundEmployee) throw new BadRequestError("Employee not found !!!");
+  if (!foundEmployee) throw new BadRequestError("Employee not found !!!");
 
-    const updatedEmployee = await Employee.findByIdAndUpdate(
-        employeeId,
-        {
-            status,
-        },
-        { new: true, lean: true }
-    );
+  const updatedEmployee = await Employee.findByIdAndUpdate(
+    employeeId,
+    {
+      status,
+    },
+    { new: true, lean: true }
+  );
 
-    return getInfoData({
-        fields: ["_id", "firstName", "lastName", "status"],
-        object: updatedEmployee,
-    });
+  return getInfoData({
+    fields: ["_id", "firstName", "lastName", "status"],
+    object: updatedEmployee,
+  });
 };
 
 const getAllEmployees = async ({ filter, select }) => {
-    const employees = await Employee.find(filter)
-        .sort({ createdAt: -1 })
-        .select(select)
-        .lean();
-    return employees;
+  const employees = await Employee.find(filter)
+    .sort({ createdAt: -1 })
+    .select(select)
+    .lean();
+  return employees;
 };
 
-const getAllEmployeesNotExistAccount = async ({ accountId, filter, select }) => {
-    const result = []
-    const employees = await Employee.find(filter)
-        .sort({ createdAt: -1 })
-        .select(select)
-        .lean();
+const getAllEmployeesNotExistAccount = async ({
+  accountId,
+  filter,
+  select,
+}) => {
+  const result = [];
+  const employees = await Employee.find(filter)
+    .sort({ createdAt: -1 })
+    .select(select)
+    .lean();
 
-    await Promise.all(employees.map(async (employee) => {
-        const isExist = await findEmployeeInAccount(employee._id)
-        if (!isExist || accountId && String(isExist._id) === accountId) {
-            result.push(employee)
-        }
-    }))
-    return result;
+  await Promise.all(
+    employees.map(async (employee) => {
+      const isExist = await findEmployeeInAccount(employee._id);
+      if (!isExist || (accountId && String(isExist._id) === accountId)) {
+        result.push(employee);
+      }
+    })
+  );
+  return result;
 };
 
 const getOneEmployee = async ({ employeeId }) => {
-    await findEmployeeById({ employeeId })
+  await findEmployeeById({ employeeId });
 
-    const employees = await Employee.findOne({ _id: employeeId }).lean();
-    return employees;
+  const employees = await Employee.findOne({ _id: employeeId }).lean();
+  return employees;
 };
 
-
 export {
-    findEmployeeById,
-    updateEmployee,
-    changeStatusEmployee,
-    getAllEmployees,
-    getOneEmployee,
-    getAllEmployeesNotExistAccount
+  findEmployeeById,
+  updateEmployee,
+  changeStatusEmployee,
+  getAllEmployees,
+  getOneEmployee,
+  getAllEmployeesNotExistAccount,
 };

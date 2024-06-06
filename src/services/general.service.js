@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import General from "../models/general.model.js";
-import { getGeneral, updateGeneral } from "../repositories/general.repo.js";
+import { getGeneral } from "../repositories/general.repo.js";
 
 class GeneralService {
   static updateGeneral = async ({
@@ -14,7 +14,6 @@ class GeneralService {
   }) => {
     try {
       const idGeneral = generalId ?? new mongoose.Types.ObjectId();
-      console.log(idGeneral, "asdas");
       const filter = { _id: idGeneral },
         update = {
           name,
@@ -33,25 +32,12 @@ class GeneralService {
       );
       return updatedGeneral ? updatedGeneral : null;
     } catch (error) {
-      console.error("Error updating general:", error);
       throw error;
     }
   };
 
-  static getGeneral = async ({
-    select = [
-      "_id",
-      "name",
-      "email",
-      "phone",
-      "address",
-      "logo",
-      "favicon",
-      "createdAt",
-      "updatedAt",
-    ],
-  }) => {
-    return await getGeneral({ select });
+  static getGeneral = async () => {
+    return await getGeneral();
   };
 }
 
