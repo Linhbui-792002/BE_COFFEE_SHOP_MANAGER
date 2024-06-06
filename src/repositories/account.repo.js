@@ -53,12 +53,10 @@ const getAllAccountsNotExistEmployee = async ({ employeeId, filter = {}, select 
         };
     }
     const mergedFilter = { ...filter, ...employeeFilter };
-    console.log(mergedFilter, 'mergedFilter');
     const result = await Account.find(mergedFilter)
         .sort({ createdAt: -1 })
         .select(select)
         .lean();
-    console.log(result, 'result');
     return result;
 };
 
