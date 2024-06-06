@@ -1,12 +1,12 @@
 'use strict';
 import bcrypt from 'bcrypt';
-import { BadRequestError } from "../core/error.response.js";
+import { BadRequestError, ConflictRequestError } from "../core/error.response.js";
 import Account from "../models/account.model.js";
 import KeyTokenService from './keyToken.service.js';
 import { getInfoData } from '../utils/index.js';
 import { findEmployeeById } from '../repositories/employee.repo.js';
 import { PASSWORD_RESET } from '../constants/index.js';
-import { findAccount, getAllAccounts } from '../repositories/account.repo.js';
+import { findAccount, getAllAccounts, getAllAccountsNotExistEmployee } from '../repositories/account.repo.js';
 
 
 class AccountService {
@@ -16,7 +16,7 @@ class AccountService {
     static createAccount = async ({ username, password, status, role, employeeId }) => {
 
         const foundAccount = await Account.findOne({ username }).lean();
-        if (foundAccount) throw new BadRequestError("Account already registered!")
+        if (foundAccount) throw new ConflictRequestError("Account already registered!")
 
         if (!_.isEmpty(employeeId)) {
             const foundEmployee = await findEmployeeById({ employeeId });
@@ -119,6 +119,11 @@ class AccountService {
     static getAllAccounts = async ({ filter = {}, select = ['_id', 'username', 'role', 'status', 'createdAt', 'updatedAt'] }) => {
         return await getAllAccounts({ filter, select })
     }
+
+    static getAllAccountsNotExistEmployee = async ({ employeeId = null, filter = { status: false }, select = ['_id', 'username', 'role', 'employeeId'] }) => {
+        return await getAllAccountsNotExistEmployee({ employeeId, filter, select })
+    }
+
 
     static findOneAccount = async ({ accountId, unSelect = ['password', '_v'] }) => {
         return await findAccount({ accountId, unSelect })

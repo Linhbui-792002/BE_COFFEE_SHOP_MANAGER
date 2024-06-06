@@ -38,7 +38,6 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
 
 const checkAdminRole = async (req, res, next) => {
     const role = req.account.role
-    console.log(role, 'role', role != ROLES.ADMIN)
     if (role != ROLES.ADMIN) {
         throw new ForbiddenError("Forbidden")
     }
@@ -84,7 +83,6 @@ const authentication = async (req, res, next) => {
             if (err) throw new ForbiddenError("Forbidden")
             return decoded
         })
-        console.log(decodeAccount, 'decodeAccount');
         if (accountId != decodeAccount.accountId) throw new AuthFailureError('Invalid AccountId')
         if (decodeAccount.status) throw new AuthFailureError('Account Blocked')
         req.keyStore = keyStore
