@@ -20,7 +20,6 @@ const fileFilter = (req, file, callback) => {
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
         const rootDir = process.cwd()
-        console.log(rootDir, 'rootDir');
 
         //create folders
         fs.mkdirSync(path.join(rootDir, "public/uploads"), { recursive: true });
@@ -29,7 +28,6 @@ const storage = multer.diskStorage({
         callback(null, path.join(rootDir, "/public/uploads"))
     },
     filename: (req, file, callback) => {
-        console.log(file, 'file');
         const extension = file.mimetype.replace("image/", "")
 
         if (!req.savedImages) {
@@ -39,7 +37,6 @@ const storage = multer.diskStorage({
         const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
 
         const url = `image_${uniqueSuffix}.${extension}`
-        console.log(url, 'url')
         req.savedImages = [...req.savedImages, path.join(url)];
         callback(null, url)
 

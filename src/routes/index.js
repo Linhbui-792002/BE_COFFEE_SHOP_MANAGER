@@ -5,9 +5,11 @@ import routerAccount from "./account.router.js";
 import routerEmployee from "./employee.router.js";
 import routerUpload from "./upload.router.js";
 import routerGeneral from "./general.router.js";
+import routerMenuInfo from "./menuInfo.router.js";
 
 const router = express.Router();
 
+router.use("/v1/api/menuInfo", routerMenuInfo);
 router.use("/v1/api/upload", routerUpload);
 router.use("/v1/api/employee", routerEmployee);
 router.use("/v1/api/account", routerAccount);
