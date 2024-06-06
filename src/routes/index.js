@@ -7,6 +7,7 @@ import routerUpload from "./upload.router.js";
 import routerGeneral from "./general.router.js";
 import routerMenuInfo from "./menuInfo.router.js";
 import routerProductCategory from "./productCategory.router.js";
+import salaryRouter from "./salary.router.js";
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.use("/v1/api/account", routerAccount);
 router.use("/v1/api/general", routerGeneral);
 router.use("/v1/api/productCategory", routerProductCategory);
 router.use("/v1/api/menuInfo", routerMenuInfo);
+router.use("/v1/api/salary", salaryRouter);
 router.use("/v1/api/", routerAccess);
 
 export default router;

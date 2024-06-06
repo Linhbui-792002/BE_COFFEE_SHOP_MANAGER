@@ -5,7 +5,6 @@ import Account from "../models/account.model.js";
 import KeyTokenService from './keyToken.service.js';
 import { getInfoData } from '../utils/index.js';
 import { findEmployeeById } from '../repositories/employee.repo.js';
-import _ from 'lodash';
 import { PASSWORD_RESET } from '../constants/index.js';
 import { findAccount, getAllAccounts, getAllAccountsNotExistEmployee } from '../repositories/account.repo.js';
 
