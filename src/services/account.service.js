@@ -7,7 +7,7 @@ import { getInfoData } from '../utils/index.js';
 import { findEmployeeById } from '../repositories/employee.repo.js';
 import _ from 'lodash';
 import { PASSWORD_RESET } from '../constants/index.js';
-import { findAccount, getAllAccounts } from '../repositories/account.repo.js';
+import { findAccount, getAllAccounts, getAllAccountsNotExistEmployee } from '../repositories/account.repo.js';
 
 
 class AccountService {
@@ -120,6 +120,11 @@ class AccountService {
     static getAllAccounts = async ({ filter = {}, select = ['_id', 'username', 'role', 'status', 'createdAt', 'updatedAt'] }) => {
         return await getAllAccounts({ filter, select })
     }
+
+    static getAllAccountsNotExistEmployee = async ({ employeeId = null, filter = { status: false }, select = ['_id', 'username', 'role', 'employeeId'] }) => {
+        return await getAllAccountsNotExistEmployee({ employeeId, filter, select })
+    }
+
 
     static findOneAccount = async ({ accountId, unSelect = ['password', '_v'] }) => {
         return await findAccount({ accountId, unSelect })

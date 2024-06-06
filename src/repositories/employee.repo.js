@@ -88,7 +88,7 @@ const getAllEmployeesNotExistAccount = async ({ accountId, filter, select }) => 
 
     await Promise.all(employees.map(async (employee) => {
         const isExist = await findEmployeeInAccount(employee._id)
-        if (!isExist || accountId && String(isExist._id) === accountId) {
+        if (!isExist || (isExist && accountId && String(isExist._id) === accountId)) {
             result.push(employee)
         }
     }))

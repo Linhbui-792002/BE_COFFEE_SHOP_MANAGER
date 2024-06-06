@@ -37,6 +37,13 @@ class AccountController {
             options: result.options
         }).send(res)
     }
+    static getAllAccountsNotExistEmployee = async (req, res, next) => {
+        const { employeeId } = req.params
+        new SuccessResponse({
+            message: "Get all account not employee success",
+            metadata: await AccountService.getAllAccountsNotExistEmployee({ employeeId, ...req.query }),
+        }).send(res)
+    }
 
     static findOneAccount = async (req, res, next) => {
         new SuccessResponse({
