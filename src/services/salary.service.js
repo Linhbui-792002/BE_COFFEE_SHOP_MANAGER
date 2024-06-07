@@ -28,7 +28,8 @@ class SalaryService {
         const dateWorkTerm = String(workTerm).split("-")
         const date = new Date(dateWorkTerm[0].trim(), dateWorkTerm[1].trim() - 1)
         const employeeInfo = await EmployeeService.getInfoEmployees(query);
-        if(new Date(employeeInfo.createdAt).getTime() >= new Date(date).getTime()){
+        const dateCreated = new Date(new Date(employeeInfo.createdAt).getFullYear(), new Date(employeeInfo.createdAt).getMonth());
+        if(dateCreated.getTime() > new Date(date).getTime()){
             throw new BadRequestError(`Work term must be greater than month ${employeeInfo.createdAt.getMonth() + 1} year ${employeeInfo.createdAt.getFullYear()}`);
         }
 
