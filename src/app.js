@@ -5,6 +5,7 @@ import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import cors from 'cors'
+import path from 'path';
 
 //init db
 import { instanceMongodb } from './database/init.mongodb.js';
@@ -15,7 +16,7 @@ dotenv.config();
 const app = express();
 //init middlewares
 app.use(morgan('dev'));
-app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(compression());
 app.use(express.json());
 app.use(
@@ -25,11 +26,14 @@ app.use(
 );
 
 
-app.use(cors(corsOptions));
+app.use(cors({ credentials: true }));
 //init db
 
 // checkOverLoad();
 
+// setUp public file
+app.use(express.static(path.resolve("./public")))
+app.use("/public", express.static(path.resolve("./public")))
 //init routers
 app.use('/', router);
 

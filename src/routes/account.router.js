@@ -16,6 +16,8 @@ routerAccount.patch('/', asyncHandler(AccountController.updateAccount));
 routerAccount.use(asyncHandler(checkAdminRole))
 
 routerAccount.get('/', asyncHandler(AccountController.getAllAccounts));
+routerAccount.get('/list/accountNotExistEmployee/:employeeId?', asyncHandler(AccountController.getAllAccountsNotExistEmployee));
+
 routerAccount.post('/', asyncHandler(AccountController.createAccount));
 routerAccount.patch('/resetPassword', asyncHandler(AccountController.resetPassword));
 routerAccount.patch('/blockAccount', asyncHandler(AccountController.blockAccount));
