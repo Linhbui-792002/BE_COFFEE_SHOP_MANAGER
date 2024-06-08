@@ -105,6 +105,8 @@ class AccessService {
             { new: true, lean: true }
         );
 
+        await KeyTokenService.deleteKeyByAccountId(accountId)
+
         return {
             account: getInfoData({
                 fields: ['_id', 'username', 'role', 'employeeId', 'status'],
