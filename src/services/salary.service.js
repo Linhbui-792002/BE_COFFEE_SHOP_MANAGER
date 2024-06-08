@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
-import {creatSalary, getSalary, updateSalary, getAllEmployees, getSalaryStatics} from "../repositories/salary.repo.js"
+import {creatSalary, getSalary, updateSalary, getAllEmployees, getSalaryStatics, getDetailSalary, getOneSalry} from "../repositories/salary.repo.js"
 import EmployeeService from "./employee.service.js";
 import { BadRequestError } from "../core/error.response.js";
+import AccountService from "./account.service.js";
 
 class SalaryService {
     static creatSalary = async ({employeeId, workTerm, dateOff, deduction, bonusPercent, bonus, hardSalary, totalSalary}, createdBy) => {
@@ -48,8 +49,25 @@ class SalaryService {
         return await getAllEmployees(filter, select)
     }
 
-    static getByFilter = async(filter) => {
-        return await getSalary({filter});
+    static getSalary = async(id, isGetOne) => {
+        if(!id){
+            return await getSalary();
+        }
+
+        if(isGetOne){
+            return await getOneSalry({_id: new mongoose.Types.ObjectId(id)});
+        }
+
+        return await getSalary({_id: new mongoose.Types.ObjectId(id)});
+    }
+
+    static getEmployeeSalary = async(body) => {
+        //get Employee from req
+        if(!body.accountId){
+            throw new BadRequestError("Account not found !!!");
+        }
+        const accountData = await AccountService.findOneAccount({accountId: body.accountId})
+        return await getSalary({employeeId: accountData.employeeId.toString()});
     }
 }
 

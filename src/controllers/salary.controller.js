@@ -22,14 +22,21 @@ class SalaryController {
         const {id} = req.params
         new OK({
             message: "Get salary success",
-            metadata: await SalaryService.getByFilter({_id: id})
+            metadata: await SalaryService.getSalary(id, true)
+        }).send(res)
+    }
+
+    static getEmployeeSalary = async (req, res, next) => {
+        new OK({
+            message: "Get salary success",
+            metadata: await SalaryService.getEmployeeSalary(req.account)
         }).send(res)
     }
 
     static getAllSalary = async (req, res, next) => {
         new OK({
             message: "Get salary success",
-            metadata: await SalaryService.getByFilter()
+            metadata: await SalaryService.getSalary()
         }).send(res)
     }
 
