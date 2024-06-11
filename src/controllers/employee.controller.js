@@ -40,6 +40,7 @@ class EmployeeController {
             metadata: await EmployeeService.getAllEmployeesDoing(req.query)
         }).send(res)
     }
+
     static getAllEmployeesNotExistAccount = async (req, res, next) => {
         const { accountId } = req.params
         new OK({
