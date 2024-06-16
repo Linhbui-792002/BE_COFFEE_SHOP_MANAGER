@@ -8,9 +8,11 @@ import routerGeneral from "./general.router.js";
 import routerMenuInfo from "./menuInfo.router.js";
 import routerProductCategory from "./productCategory.router.js";
 import salaryRouter from "./salary.router.js";
+import routerProduct from "./product.router.js";
 
 const router = express.Router();
 
+router.use("/v1/api/product", routerProduct)
 router.use("/v1/api/upload", routerUpload);
 router.use("/v1/api/employee", routerEmployee);
 router.use("/v1/api/account", routerAccount);

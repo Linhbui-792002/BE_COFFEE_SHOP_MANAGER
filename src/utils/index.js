@@ -7,6 +7,9 @@ const getInfoData = ({ fields = [], object = {} }) => {
   return _.pick(object, fields);
 };
 
+function removeKeys(obj = {}, fieldsToRemove = []) {
+  return _.omit(obj, fieldsToRemove);
+}
 // [ 'a', 'b'] => {a:1, b:1}
 const getSelectData = (select = []) => {
   return Object.fromEntries(select.map(el => [el, 1]))
@@ -43,4 +46,4 @@ const updateNestedObjectParser = (obj) => {
   return final
 }
 
-export { getInfoData, getSelectData, unGetSelectData, removeUndefinedObject, updateNestedObjectParser };
+export { getInfoData, getSelectData, unGetSelectData, removeUndefinedObject, updateNestedObjectParser, removeKeys };
