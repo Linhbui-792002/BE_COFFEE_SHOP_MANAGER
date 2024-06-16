@@ -2,6 +2,7 @@
 
 import mongoose, { Schema } from 'mongoose';
 import slugify from 'slugify';
+import { BadRequestError } from '../core/error.response.js';
 
 const DOCUMENT_NAME = 'Product';
 const COLLECTION_NAME = 'Products';
@@ -15,7 +16,8 @@ const productSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique: true
     },
     detail: {
         type: String,
@@ -29,6 +31,7 @@ const productSchema = new mongoose.Schema({
     },
     productCombo: [
         {
+            _id: false,
             productId: {
                 type: Schema.Types.ObjectId,
                 ref: "Product",
@@ -38,10 +41,13 @@ const productSchema = new mongoose.Schema({
             },
             quantity: {
                 type: Number,
-                required: true
-            }
+                required: function () {
+                    return this.isCombo;
+                }
+            },
 
-        }
+
+        },
     ],
     costPrice: {
         type: Number,
@@ -69,6 +75,25 @@ const productSchema = new mongoose.Schema({
     timestamps: true,
     collection: COLLECTION_NAME,
 })
+
+// trigger
+productSchema.pre('save', function (next) {
+    if (this.isCombo) {
+        if (!this.productCombo || this.productCombo.length === 0) {
+            return next(new BadRequestError('Please select product in product combo'));
+        }
+
+        for (let comboItem of this.productCombo) {
+            if (!comboItem.productId) {
+                return next(new BadRequestError('Not found product in product combo'));
+            }
+            if (!comboItem.quantity) {
+                return next(new BadRequestError('There is no quantity in the product combo'));
+            }
+        }
+    }
+    next();
+});
 
 // create index for search
 productSchema.index({ name: 'text', detail: 'text' })
