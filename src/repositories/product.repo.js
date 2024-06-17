@@ -8,8 +8,8 @@ const getAllProduct = async ({ keySearch, limit, page, filter, select }) => {
     let searchCriteria = { ...filter };
 
     if (keySearch) {
-        const regexSearch = new RegExp(keySearch);
-        searchCriteria = { ...searchCriteria, $text: { $search: regexSearch }, }
+        const regexSearch = new RegExp(keySearch,'i');
+        searchCriteria = { ...searchCriteria, name:  regexSearch , }
     }
 
     const products = await Product.find(searchCriteria)
@@ -31,7 +31,6 @@ const getAllProduct = async ({ keySearch, limit, page, filter, select }) => {
 
 const getProductInfo = async ({ productId }) => {
     return await Product.findOne({ _id: productId })
-        .populate('categoryId', '_id name')
         .populate({
             path: 'productCombo',
             populate: { path: 'productId', select: '_id name image costPrice price' }
@@ -40,10 +39,10 @@ const getProductInfo = async ({ productId }) => {
 }
 
 const searchProductByEmployee = async ({ keySearch }) => {
-    const regexSearch = new RegExp(keySearch)
+    const regexSearch = new RegExp(keySearch,'i')
     const results = await Product.find({
         status: true,
-        $text: { $search: regexSearch },
+        name:  regexSearch ,
     }, { score: { $meta: 'textScore' } })
         .sort({ score: { $meta: 'textScore' } })
         .lean()
