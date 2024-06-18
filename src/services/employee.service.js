@@ -59,7 +59,14 @@ class EmployeeService {
 
   static getAllEmployeesDoing = async ({
     filter = { status: true },
-    select = ["_id", "firstName", "lastName"],
+    select = [
+      "_id",
+      "firstName",
+      "lastName",
+      "phoneNumber",
+      "hardSalary",
+      "gender",
+    ],
   }) => {
     return await getAllEmployees({ filter, select });
   };

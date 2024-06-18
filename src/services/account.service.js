@@ -7,6 +7,7 @@ import { getInfoData } from '../utils/index.js';
 import { findEmployeeById } from '../repositories/employee.repo.js';
 import { PASSWORD_RESET } from '../constants/index.js';
 import { findAccount, getAllAccounts, getAllAccountsNotExistEmployee } from '../repositories/account.repo.js';
+import _ from 'lodash';
 
 
 class AccountService {
@@ -55,7 +56,7 @@ class AccountService {
             {
                 status,
                 role,
-                employeeId: !_.isEmpty(employeeId) ? employeeId : null
+                employeeId: employeeId ? employeeId : null
             },
             { new: true, lean: true }
         );

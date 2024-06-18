@@ -1,6 +1,6 @@
 'use strict';
 import { createTokenPair } from '../auth/authUtils.js';
-import { BadRequestError } from '../core/error.response.js';
+import { BadRequestError, ForbiddenError } from '../core/error.response.js';
 import Account from '../models/account.model.js';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
@@ -13,7 +13,7 @@ class AccessService {
 
     static handleRefreshToken = async ({ refreshToken, account, keyStore }) => {
 
-        const { accountId, username, role } = account;
+        const { accountId, username, role, status } = account;
 
         if (keyStore.refreshTokensUsed.includes(refreshToken)) {
             await KeyTokenService.deleteKeyByAccountId(accountId)
@@ -104,6 +104,8 @@ class AccessService {
             },
             { new: true, lean: true }
         );
+
+        await KeyTokenService.deleteKeyByAccountId(accountId)
 
         return {
             account: getInfoData({
