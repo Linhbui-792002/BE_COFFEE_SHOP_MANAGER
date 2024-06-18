@@ -43,9 +43,7 @@ const searchProductByEmployee = async ({ keySearch }) => {
     const results = await Product.find({
         status: true,
         name:  regexSearch ,
-    }, { score: { $meta: 'textScore' } })
-        .sort({ score: { $meta: 'textScore' } })
-        .lean()
+    })        .lean()
     return results
 
 }
