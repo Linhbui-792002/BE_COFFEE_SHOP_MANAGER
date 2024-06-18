@@ -12,7 +12,7 @@ const getAllOrders = async ({ keySearch, limit, page, filter, select }) => {
   }
 
   const orders = await Order.find(searchCriteria)
-    .populate("employeeId")
+    // .populate("employeeId")
     .skip(skip)
     .limit(limit)
     .sort({ createdAt: -1 })

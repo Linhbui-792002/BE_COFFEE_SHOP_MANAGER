@@ -4,7 +4,6 @@ import AccountService from "../services/account.service.js";
 import { removeKeys } from "../utils/index.js";
 
 class OrderController {
-  //   //CREATE//
   static createOrder = async (req, res, next) => {
     const { body } = req;
     console.log(body, "body");
@@ -17,7 +16,6 @@ class OrderController {
     }).send(res);
   };
 
-  //   //QUERY//
   static getAllOrders = async (req, res, next) => {
     const query = req.query;
     const filter = removeKeys(query, ["limit", "page", "keySearch"]);
