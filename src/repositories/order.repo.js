@@ -6,6 +6,16 @@ const getAllOrders = async ({ keySearch, limit, page, filter, select }) => {
   const skip = (page - 1) * limit;
   let searchCriteria = { ...filter };
 
+  if (filter.fromDate && filter.toDate) {
+    searchCriteria = {
+      ...searchCriteria,
+      createdAt: {
+        $gte: ISODate(filter.fromDate),
+        $lt: ISODate(filter.toDate),
+      },
+    };
+  }
+
   if (keySearch) {
     const regexSearch = new RegExp(keySearch);
     searchCriteria = { ...searchCriteria, $text: { $search: regexSearch } };
@@ -29,7 +39,13 @@ const getAllOrders = async ({ keySearch, limit, page, filter, select }) => {
 };
 
 const getOrderInfo = async ({ orderId }) => {
-  return await Order.findOne({ _id: orderId }).populate("employeeId").lean();
+  return await Order.findById(orderId)
+    .populate({ path: "createdBy", select: "_id firstName lastName" })
+    .populate({
+      path: "orderDetail.productId",
+      select: "name",
+    })
+    .lean();
 };
 
 const createOrder = async ({
