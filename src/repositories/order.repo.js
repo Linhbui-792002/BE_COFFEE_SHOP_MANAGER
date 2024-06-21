@@ -29,7 +29,13 @@ const getAllOrders = async ({ keySearch, limit, page, filter, select }) => {
 };
 
 const getOrderInfo = async ({ orderId }) => {
-  return await Order.findOne({ _id: orderId }).populate("employeeId").lean();
+  return await Order.findById(orderId)
+    .populate({ path: "createdBy", select: "_id firstName lastName" })
+    .populate({
+      path: "orderDetail.productId",
+      select: "name",
+    })
+    .lean();
 };
 
 const createOrder = async ({
