@@ -10,8 +10,8 @@ const getAllOrders = async ({ keySearch, limit, page, filter, select }) => {
     searchCriteria = {
       ...searchCriteria,
       createdAt: {
-        $gte: ISODate(filter.fromDate),
-        $lt: ISODate(filter.toDate),
+        $gte: new Date(filter.fromDate),
+        $lt: new Date(filter.toDate),
       },
     };
   }
