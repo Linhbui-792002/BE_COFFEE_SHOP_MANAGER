@@ -6,6 +6,16 @@ const getAllOrders = async ({ keySearch, limit, page, filter, select }) => {
   const skip = (page - 1) * limit;
   let searchCriteria = { ...filter };
 
+  if (filter.fromDate && filter.toDate) {
+    searchCriteria = {
+      ...searchCriteria,
+      createdAt: {
+        $gte: ISODate(filter.fromDate),
+        $lt: ISODate(filter.toDate),
+      },
+    };
+  }
+
   if (keySearch) {
     const regexSearch = new RegExp(keySearch);
     searchCriteria = { ...searchCriteria, $text: { $search: regexSearch } };
