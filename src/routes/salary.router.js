@@ -14,7 +14,6 @@ salaryRouter.get('/:id', asyncHandler(SalaryController.getSalary));
 salaryRouter.use(asyncHandler(checkAdminRole))
 salaryRouter.get('/', asyncHandler(SalaryController.getAllSalary));
 salaryRouter.post('/', asyncHandler(SalaryController.createSalary));
-salaryRouter.get('/list/employee', asyncHandler(SalaryController.getListEmployee))
 salaryRouter.put('/', asyncHandler(SalaryController.updateSalary));
 
 export default salaryRouter;

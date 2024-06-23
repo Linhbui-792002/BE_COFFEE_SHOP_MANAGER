@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { creatSalary, getSalary, updateSalary, getAllEmployees, getSalaryStatics, getDetailSalary, getOneSalry } from "../repositories/salary.repo.js"
+import { creatSalary, getSalary, updateSalary, getSalaryStatics, getOneSalary } from "../repositories/salary.repo.js"
 import EmployeeService from "./employee.service.js";
 import { BadRequestError } from "../core/error.response.js";
 import AccountService from "./account.service.js";
@@ -45,17 +45,13 @@ class SalaryService {
         return await updateSalary({ _id: salaryId, workTerm, dateOff, deduction, bonusPercent, bonus, hardSalary, totalSalary });
     }
 
-    static getAllEmployee = async ({ filter = { status: true }, select = ['_id', 'firstName', 'lastName', 'hardSalary'] }) => {
-        return await getAllEmployees(filter, select)
-    }
-
     static getSalary = async (id, isGetOne) => {
         if (!id) {
             return await getSalary();
         }
 
         if (isGetOne) {
-            return await getOneSalry({ _id: new mongoose.Types.ObjectId(id) });
+            return await getOneSalary({ _id: new mongoose.Types.ObjectId(id) });
         }
 
         return await getSalary({ _id: new mongoose.Types.ObjectId(id) });

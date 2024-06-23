@@ -46,13 +46,6 @@ class SalaryController {
             metadata: await SalaryService.updateSalary(req.body),
         }).send(res)
     }
-
-    static getListEmployee = async (req, res, next) => {
-        new OK({
-            message: "Get list employee success",
-            metadata: await SalaryService.getAllEmployee(req.body),
-        }).send(res)
-    }
 }
 
 export default SalaryController;
