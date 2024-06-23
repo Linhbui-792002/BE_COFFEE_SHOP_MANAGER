@@ -22,8 +22,8 @@ class SuccessResponse {
 }
 
 class OK extends SuccessResponse {
-  constructor({ message, metadata }) {
-    super({ message, metadata });
+  constructor({ message, metadata, options }) {
+    super({ message, metadata, options });
   }
 }
 
