@@ -12,7 +12,6 @@ const getSalary = async (filter) => {
 }
 
 const getOneSalary = async (filter) => {
-    console.log(filter);
     return await Salary.findOne({ ...filter }).populate('employeeId').lean();
 }
 

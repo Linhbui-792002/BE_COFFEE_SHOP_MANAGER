@@ -37,6 +37,10 @@ class SalaryService {
         return await creatSalary({ employeeId, workTerm, dateOff, deduction, bonusPercent, bonus, hardSalary, totalSalary, createdBy });
     }
 
+    static getByFilter = async (filter) => {
+        return await getOneSalary(filter);
+    }
+
     static getSalaryStatics = async (query) => {
         return await getSalaryStatics(query);
     }
