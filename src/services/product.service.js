@@ -11,7 +11,7 @@ import {
 
 class ProductService {
   static getAllProducts = async ({
-    limit = 5,
+    limit = 3,
     page = 1,
     keySearch = "",
     filter,
