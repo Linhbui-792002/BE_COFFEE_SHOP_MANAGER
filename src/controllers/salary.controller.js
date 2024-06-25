@@ -19,31 +19,31 @@ class SalaryController {
     }
 
     static getSalary = async (req, res, next) => {
-        const {id} = req.params
+        const { id } = req.params
         new OK({
             message: "Get salary success",
-            metadata: await SalaryService.getByFilter({_id: id})
+            metadata: await SalaryService.getSalary(id, true)
+        }).send(res)
+    }
+
+    static getEmployeeSalary = async (req, res, next) => {
+        new OK({
+            message: "Get salary success",
+            metadata: await SalaryService.getEmployeeSalary(req.account)
         }).send(res)
     }
 
     static getAllSalary = async (req, res, next) => {
         new OK({
             message: "Get salary success",
-            metadata: await SalaryService.getByFilter()
+            metadata: await SalaryService.getSalary()
         }).send(res)
     }
 
-    static updateSalary = async(req, res, next) => {
+    static updateSalary = async (req, res, next) => {
         new OK({
             message: "Edit salary success",
             metadata: await SalaryService.updateSalary(req.body),
-        }).send(res)
-    }
-
-    static getListEmployee = async(req, res, next) => {
-        new OK({
-            message: "Get list employee success",
-            metadata: await SalaryService.getAllEmployee(req.body),
         }).send(res)
     }
 }
