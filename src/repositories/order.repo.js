@@ -1,5 +1,6 @@
 import { BadRequestError } from "../core/error.response.js";
 import Order from "../models/order.model.js";
+import { removeKeys } from "../utils/index.js";
 import { findAccount } from "./account.repo.js";
 
 const getAllOrders = async ({ keySearch, limit, page, filter, select }) => {
@@ -14,6 +15,8 @@ const getAllOrders = async ({ keySearch, limit, page, filter, select }) => {
         $lt: new Date(filter.toDate),
       },
     };
+
+    searchCriteria = removeKeys(searchCriteria, ["fromDate", "toDate"]);
   }
 
   if (keySearch) {
