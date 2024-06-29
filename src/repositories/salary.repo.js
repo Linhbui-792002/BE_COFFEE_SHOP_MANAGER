@@ -1,17 +1,18 @@
 import mongoose from "mongoose";
 import Salary from "../models/salary.model.js";
-import Employee from "../models/employee.model.js";
 
-const getSalary = async ({ filter }) => {
+const getSalary = async (filter) => {
     if (filter) {
-        return await Salary.findOne({ ...filter })
-            .populate('employeeId')
-            .lean();
+        return await Salary.find({ ...filter }).populate('employeeId').lean();
     }
 
     return await Salary.find()
         .populate('employeeId')
         .lean();
+}
+
+const getOneSalary = async (filter) => {
+    return await Salary.findOne({ ...filter }).populate('employeeId').lean();
 }
 
 const creatSalary = async ({ employeeId, workTerm, dateOff, deduction, bonusPercent, bonus, hardSalary, totalSalary, createdBy },) => {
@@ -20,9 +21,6 @@ const creatSalary = async ({ employeeId, workTerm, dateOff, deduction, bonusPerc
     });
 }
 
-const getDetailSalary = async (_id) => {
-    return await Salary.find({ "id": new ObjectId(_id) }).lean();
-}
 
 const getSalaryStatics = async (query) => {
     const queryDb = [
@@ -69,11 +67,5 @@ const updateSalary = async ({ _id, workTerm, dateOff, deduction, bonusPercent, b
     return await Salary.findByIdAndUpdate(_id, { workTerm, dateOff, deduction, bonusPercent, bonus, hardSalary, totalSalary });
 }
 
-const getAllEmployees = async ({ filter, select }) => {
-    return await Employee.find(filter)
-        .sort({ createdAt: -1 })
-        .select(select)
-        .lean();
-};
 
-export { creatSalary, getSalaryStatics, getDetailSalary, updateSalary, getAllEmployees, getSalary }
+export { creatSalary, getSalaryStatics, updateSalary, getSalary, getOneSalary }
