@@ -10,6 +10,7 @@ import routerProductCategory from "./productCategory.router.js";
 import salaryRouter from "./salary.router.js";
 import routerProduct from "./product.router.js";
 import routerOrder from "./order.router.js";
+import statisticRouter from "./statistic.router.js";
 
 const router = express.Router();
 
@@ -23,5 +24,6 @@ router.use("/v1/api/menuInfo", routerMenuInfo);
 router.use("/v1/api/salary", salaryRouter);
 router.use("/v1/api/order", routerOrder);
 router.use("/v1/api/", routerAccess);
+router.use("/v1/api/", statisticRouter);
 
 export default router;
