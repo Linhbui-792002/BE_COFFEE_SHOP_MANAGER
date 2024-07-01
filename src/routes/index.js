@@ -24,6 +24,6 @@ router.use("/v1/api/menuInfo", routerMenuInfo);
 router.use("/v1/api/salary", salaryRouter);
 router.use("/v1/api/order", routerOrder);
 router.use("/v1/api/", routerAccess);
-router.use("/v1/api/", statisticRouter);
+router.use("/v1/api/statistic", statisticRouter);
 
 export default router;
