@@ -1,10 +1,23 @@
 import { BadRequestError } from "../core/error.response.js";
 import Order from "../models/order.model.js";
+import { removeKeys } from "../utils/index.js";
 import { findAccount } from "./account.repo.js";
 
 const getAllOrders = async ({ keySearch, limit, page, filter, select }) => {
   const skip = (page - 1) * limit;
   let searchCriteria = { ...filter };
+
+  if (filter.fromDate && filter.toDate) {
+    searchCriteria = {
+      ...searchCriteria,
+      createdAt: {
+        $gte: new Date(filter.fromDate),
+        $lt: new Date(filter.toDate),
+      },
+    };
+
+    searchCriteria = removeKeys(searchCriteria, ["fromDate", "toDate"]);
+  }
 
   if (keySearch) {
     const regexSearch = new RegExp(keySearch);
@@ -29,7 +42,13 @@ const getAllOrders = async ({ keySearch, limit, page, filter, select }) => {
 };
 
 const getOrderInfo = async ({ orderId }) => {
-  return await Order.findOne({ _id: orderId }).populate("employeeId").lean();
+  return await Order.findById(orderId)
+    .populate({ path: "createdBy", select: "_id firstName lastName" })
+    .populate({
+      path: "orderDetail.productId",
+      select: "name",
+    })
+    .lean();
 };
 
 const createOrder = async ({

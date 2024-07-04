@@ -59,8 +59,8 @@ class AccessService {
         if (!matchPassword) throw new BadRequestError("Username or password invalid")
         if (foundAccount.status) throw new BadRequestError("Account blocked")
 
-        const foundKeyToken = await findKeyTokenByAccountId(foundAccount._id)
-        if (foundKeyToken) throw new BadRequestError("Account online in other device !!!")
+        // const foundKeyToken = await findKeyTokenByAccountId(foundAccount._id)
+        // if (foundKeyToken) throw new BadRequestError("Account online in other device !!!")
 
         const privateKey = crypto.randomBytes(64).toString('hex');
         const publicKey = crypto.randomBytes(64).toString('hex');
