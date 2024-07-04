@@ -1,20 +1,21 @@
 import mongoose from "mongoose";
 
 const orderStatistic = async () => {
-  const startDate = new Date().setHours(0,0,0,0);
-  const endDate = new Date().setHours(23,59,59,999);
-
+  const now = new Date();
+  const startDate = new Date(now.setHours(0,0,0,0)).toISOString();
+  const endDate = new Date(now.setHours(23,59,59,999)).toISOString();
+    console.log(startDate, endDate);
     const queryDb = [
         {
           '$match': {
             '$and': [
               {
                 'createdAt': {
-                  '$gte': startDate
+                  '$gte': new Date(startDate)
                 }
               }, {
                 'createdAt': {
-                  '$lt': endDate
+                  '$lt': new Date(endDate)
                 }
               }
             ]
