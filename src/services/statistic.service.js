@@ -8,6 +8,9 @@ class StatisticService {
     return await StatisticRepo.orderStatistic();
   }
   
+  static revenueChartStatistic = async () => {
+    return await StatisticRepo.revenueChartStatistic();
+  }
 }
 
 

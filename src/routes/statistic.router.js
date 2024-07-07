@@ -7,7 +7,7 @@ import StatisticController from '../controllers/statistic.controller.js';
 const statisticRouter = express.Router();
 // authentication
 statisticRouter.use(asyncHandler(authentication))
-statisticRouter.get('/', asyncHandler(StatisticController.orderStatistic));
+statisticRouter.get('/', asyncHandler(StatisticController.Statistic));
 
 // //Role admin
 statisticRouter.use(asyncHandler(checkAdminRole))

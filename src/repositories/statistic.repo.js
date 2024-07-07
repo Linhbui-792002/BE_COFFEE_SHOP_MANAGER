@@ -39,6 +39,7 @@ const orderStatistic = async () => {
                         { $min: ["$$this.costPrice", "$$this.price"] },
                       ],
                     },
+                    "$$this.quantity",
                   ],
                 },
               ],
@@ -46,7 +47,7 @@ const orderStatistic = async () => {
           },
         },
         revenue: {
-          $sum: "$orderDetail.price",
+          $sum: "$totalMoney",
         },
       },
     },
@@ -92,7 +93,6 @@ const orderStatistic = async () => {
     totalProfit += order.totalProfit;
     totalRevenue += order.totalRevenue;
   });
-  console.log("orderData", orderData);
 
   return {
     results: orderData,
@@ -103,4 +103,105 @@ const orderStatistic = async () => {
   };
 };
 
-export default { orderStatistic };
+const revenueChartStatistic = async () => {
+  //Đoạn này sẽ lầy thời gian đầu của tháng hiên tại và thời điểm đầu của 6 tháng trước.
+  const firstDate = new Date().setDate(1);
+  const firstMoment = new Date(firstDate).setHours(0, 0, 0, 1);
+  //Thời điểm đầu tiên của tháng hiện tại
+  const endDate = new Date(firstMoment).toISOString();
+  //Thời điểm đầu tiên của 6 tháng trước
+  const sixMonthsAgo = new Date(firstMoment).setMonth(new Date(firstMoment).getMonth() - 6) ; //Đoạn này -7 vì cần trừ đi tháng hiên tại nữa
+  const startDate = new Date(sixMonthsAgo).toISOString();
+
+  //Thực hiện query lấy dữ liệu
+  const queryDb = [
+    {
+      '$match': {
+        '$and': [
+          {
+            'createdAt': {
+              '$gte': new Date('Sun, 31 Dec 2023 17:00:00 GMT')
+            }
+          }, {
+            'createdAt': {
+              '$lt': new Date('Sun, 30 Jun 2024 17:00:00 GMT')
+            }
+          }
+        ]
+      }
+    }, {
+      '$addFields': {
+        'profit': {
+          '$reduce': {
+            'input': '$orderDetail', 
+            'initialValue': 0, 
+            'in': {
+              '$add': [
+                '$$value', {
+                  '$multiply': [
+                    {
+                      '$subtract': [
+                        {
+                          '$max': [
+                            '$$this.costPrice', '$$this.price'
+                          ]
+                        }, {
+                          '$min': [
+                            '$$this.costPrice', '$$this.price'
+                          ]
+                        }
+                      ]
+                    }, '$$this.quantity'
+                  ]
+                }
+              ]
+            }
+          }
+        }, 
+        'revenue': '$totalMoney'
+      }
+    }, {
+      '$addFields': {
+        'localTime': {
+          '$dateAdd': {
+            'startDate': '$createdAt', 
+            'unit': 'month', 
+            'amount': 7
+          }
+        }, 
+        'yearMonth': {
+          '$dateToString': {
+            'date': '$createdAt', 
+            'format': '%m - %Y'
+          }
+        }
+      }
+    }, {
+      '$group': {
+        '_id': {
+          'date': '$yearMonth'
+        }, 
+        'revenue': {
+          '$sum': '$revenue'
+        }, 
+        'profit': {
+          '$sum': '$profit'
+        }
+      }
+    }, {
+      '$addFields': {
+        'month': '$_id.date'
+      }
+    }, {
+      '$sort': {
+        '_id.date': -1
+      }
+    }
+  ]
+
+  return {
+    revenueData: await mongoose.model("Order").aggregate(queryDb),
+  };
+};
+
+export default { orderStatistic, revenueChartStatistic };
