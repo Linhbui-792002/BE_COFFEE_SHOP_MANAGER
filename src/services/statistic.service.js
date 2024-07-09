@@ -11,6 +11,10 @@ class StatisticService {
   static revenueChartStatistic = async () => {
     return await StatisticRepo.revenueChartStatistic();
   }
+
+  static productStatistic = async () => {
+    return await StatisticRepo.productStatistic();
+  }
 }
 
 

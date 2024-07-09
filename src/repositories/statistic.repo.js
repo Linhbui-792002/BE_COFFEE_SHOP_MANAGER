@@ -110,9 +110,8 @@ const revenueChartStatistic = async () => {
   //Thời điểm đầu tiên của tháng hiện tại
   const endDate = new Date(firstMoment).toISOString();
   //Thời điểm đầu tiên của 6 tháng trước
-  const sixMonthsAgo = new Date(firstMoment).setMonth(new Date(firstMoment).getMonth() - 6) ; //Đoạn này -7 vì cần trừ đi tháng hiên tại nữa
+  const sixMonthsAgo = new Date(firstMoment).setMonth(new Date(firstMoment).getMonth() - 6);
   const startDate = new Date(sixMonthsAgo).toISOString();
-
   //Thực hiện query lấy dữ liệu
   const queryDb = [
     {
@@ -120,11 +119,11 @@ const revenueChartStatistic = async () => {
         '$and': [
           {
             'createdAt': {
-              '$gte': new Date('Sun, 31 Dec 2023 17:00:00 GMT')
+              '$gte': new Date(startDate)
             }
           }, {
             'createdAt': {
-              '$lt': new Date('Sun, 30 Jun 2024 17:00:00 GMT')
+              '$lt': new Date(endDate)
             }
           }
         ]
@@ -133,8 +132,8 @@ const revenueChartStatistic = async () => {
       '$addFields': {
         'profit': {
           '$reduce': {
-            'input': '$orderDetail', 
-            'initialValue': 0, 
+            'input': '$orderDetail',
+            'initialValue': 0,
             'in': {
               '$add': [
                 '$$value', {
@@ -157,21 +156,21 @@ const revenueChartStatistic = async () => {
               ]
             }
           }
-        }, 
+        },
         'revenue': '$totalMoney'
       }
     }, {
       '$addFields': {
         'localTime': {
           '$dateAdd': {
-            'startDate': '$createdAt', 
-            'unit': 'month', 
+            'startDate': '$createdAt',
+            'unit': 'month',
             'amount': 7
           }
-        }, 
+        },
         'yearMonth': {
           '$dateToString': {
-            'date': '$createdAt', 
+            'date': '$createdAt',
             'format': '%m - %Y'
           }
         }
@@ -180,10 +179,10 @@ const revenueChartStatistic = async () => {
       '$group': {
         '_id': {
           'date': '$yearMonth'
-        }, 
+        },
         'revenue': {
           '$sum': '$revenue'
-        }, 
+        },
         'profit': {
           '$sum': '$profit'
         }
@@ -204,4 +203,124 @@ const revenueChartStatistic = async () => {
   };
 };
 
-export default { orderStatistic, revenueChartStatistic };
+const productStatistic = async () => {
+  //Đoạn này sẽ lầy thời gian đầu của tháng hiên tại và thời điểm đầu của 6 tháng trước.
+  const firstDate = new Date().setDate(1);
+  const firstMoment = new Date(firstDate).setHours(0, 0, 0, 1);
+  //Thời điểm đầu tiên của tháng hiện tại
+  const endDate = new Date(firstMoment).toISOString();
+  //Thời điểm đầu tiên của 6 tháng trước
+  const sixMonthsAgo = new Date(firstMoment).setMonth(new Date(firstMoment).getMonth() - 6);
+  const startDate = new Date(sixMonthsAgo).toISOString();
+
+  //Thực hiện query lấy dữ liệu
+  const queryDb =
+    [
+      {
+        '$match': {
+          '$and': [
+            {
+              'createdAt': {
+                '$gte': new Date(startDate)
+              }
+            }, {
+              'createdAt': {
+                '$lt': new Date(endDate)
+              }
+            }
+          ]
+        }
+      }, {
+        '$unwind': {
+          'path': '$orderDetail',
+          'preserveNullAndEmptyArrays': true
+        }
+      }, {
+        '$addFields': {
+          'productId': '$orderDetail.productId',
+          'productProfit': {
+            '$multiply': [
+              {
+                '$subtract': [
+                  '$orderDetail.costPrice', '$orderDetail.price'
+                ]
+              }, '$orderDetail.quantity'
+            ]
+          },
+          'localTime': {
+            '$dateAdd': {
+              'startDate': '$createdAt',
+              'unit': 'month',
+              'amount': 7
+            }
+          },
+          'yearMonth': {
+            '$dateToString': {
+              'date': '$createdAt',
+              'format': '%m - %Y'
+            }
+          }
+        }
+      }, {
+        '$group': {
+          '_id': {
+            'yearMonth': '$yearMonth',
+            'productId': '$productId'
+          },
+          'productProfit': {
+            '$sum': '$productProfit'
+          }
+        }
+      }, {
+        '$addFields': {
+          'productId': '$_id.productId',
+          'yearMonth': '$_id.yearMonth'
+        }
+      }, {
+        '$lookup': {
+          'from': 'Products',
+          'localField': 'productId',
+          'foreignField': '_id',
+          'as': 'product'
+        }
+      }, {
+        '$addFields': {
+          'product': {
+            '$first': '$product'
+          }
+        }
+      }, {
+        '$addFields': {
+          'productName': '$product.name',
+          'status': '$product.status'
+        }
+      }, {
+        '$match': {
+          'status': {
+            '$eq': true
+          }
+        }
+      }, {
+        '$project': {
+          'productName': 1,
+          'productProfit': 1,
+          'yearMonth': 1
+        }
+      }
+
+    ]
+
+  const dataReturn = await mongoose.model("Order").aggregate(queryDb);
+
+  if (!dataReturn || dataReturn.length === 0) {
+    return {
+      productData: dataReturn,
+      message: "No order found!",
+    };
+  }
+  return {
+    productData: dataReturn,
+  };
+}
+
+export default { orderStatistic, revenueChartStatistic, productStatistic };
