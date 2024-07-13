@@ -15,7 +15,7 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
     try {
 
         const accessToken = await JWT.sign(payload, publicKey, {
-            expiresIn: '2days',
+            expiresIn: '1days',
         });
 
         const refreshToken = await JWT.sign(payload, privateKey, {
@@ -83,6 +83,7 @@ const authentication = async (req, res, next) => {
             if (err) throw new ForbiddenError("Forbidden")
             return decoded
         })
+        
         if (accountId != decodeAccount.accountId) throw new AuthFailureError('Invalid AccountId')
         if (decodeAccount.status) throw new AuthFailureError('Account Blocked')
         req.keyStore = keyStore

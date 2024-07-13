@@ -1,6 +1,6 @@
 'use strict';
 import { createTokenPair } from '../auth/authUtils.js';
-import { BadRequestError, ForbiddenError } from '../core/error.response.js';
+import { AuthFailureError, BadRequestError, ForbiddenError } from '../core/error.response.js';
 import Account from '../models/account.model.js';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
@@ -8,6 +8,8 @@ import KeyTokenService from './keyToken.service.js';
 import { getInfoData } from '../utils/index.js';
 import { findAccountByUsername } from '../repositories/account.repo.js';
 import { findKeyTokenByAccountId } from '../repositories/keyToken.repo.js';
+import JWT from 'jsonwebtoken';
+import { log } from 'console';
 
 class AccessService {
 
@@ -59,8 +61,12 @@ class AccessService {
         if (!matchPassword) throw new BadRequestError("Username or password invalid")
         if (foundAccount.status) throw new BadRequestError("Account blocked")
 
-        // const foundKeyToken = await findKeyTokenByAccountId(foundAccount._id)
-        // if (foundKeyToken) throw new BadRequestError("Account online in other device !!!")
+        const foundKeyToken = await findKeyTokenByAccountId(foundAccount._id)
+        try {
+            const decodeAccount = await  JWT.verify(foundKeyToken.refreshToken, foundKeyToken.privateKey)
+          } catch (err) {
+           await KeyTokenService.deleteKeyByAccountId(foundAccount._id)
+          }
 
         const privateKey = crypto.randomBytes(64).toString('hex');
         const publicKey = crypto.randomBytes(64).toString('hex');

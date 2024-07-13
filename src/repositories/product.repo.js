@@ -47,6 +47,7 @@ const searchProductByEmployee = async ({ keySearch }) => {
   return results;
 };
 const findProductById = async ({ productId }) => {
+  if(!productId ?? true) throw new BadRequestError('Product not found !!!')
   return await Product.findOne({ _id: productId }).lean();
 };
 
