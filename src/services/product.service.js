@@ -45,6 +45,20 @@ class ProductService {
     ],
   }) => {
     return await Product.find(filter)
+    .populate("categoryId", "_id name")
+      .sort({ createdAt: -1 })
+      .select(select)
+      .lean();
+  };
+
+  static getAllProductsPublicNotExitMenu = async ({
+    filter = { status: true },
+    select = [
+      "_id",
+      "name",
+    ],
+  }) => {
+    return await Product.find(filter)
       .sort({ createdAt: -1 })
       .select(select)
       .lean();

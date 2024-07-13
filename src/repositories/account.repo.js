@@ -28,7 +28,7 @@ const getAllAccounts = async ({ filter, select }) => {
         async (account) => {
             const onlineStatus = await findKeyTokenByAccountId(account?._id)
             totalAccountOnline += onlineStatus ? 1 : 0
-            return { ...account, onlineStatus }
+            return { ...account, onlineStatus: onlineStatus ? true : false }
         }))
 
     const options = {

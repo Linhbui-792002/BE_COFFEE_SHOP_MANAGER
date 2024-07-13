@@ -10,9 +10,11 @@ import routerProductCategory from "./productCategory.router.js";
 import salaryRouter from "./salary.router.js";
 import routerProduct from "./product.router.js";
 import routerOrder from "./order.router.js";
+import routerMenu from "./menu.router.js";
 
 const router = express.Router();
 
+router.use("/v1/api/menu", routerMenu)
 router.use("/v1/api/product", routerProduct);
 router.use("/v1/api/upload", routerUpload);
 router.use("/v1/api/employee", routerEmployee);

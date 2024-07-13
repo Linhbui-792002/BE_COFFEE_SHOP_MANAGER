@@ -21,4 +21,4 @@ routerMenu.patch("/", asyncHandler(MenuController.updateMenu))
 routerMenu.patch("/changeStatus", asyncHandler(MenuController.changeStatus))
 
 
-export default routerProduct
+export default routerMenu

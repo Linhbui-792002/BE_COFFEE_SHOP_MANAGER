@@ -11,7 +11,7 @@ const getAllMenu = async ({ limit, page, keySearch, filter, select }) => {
 
   const menus = await Menu.find(searchCriteria)
     .populate("menuInfoId", "_id name")
-    .populate("productId", "_id name")
+    .populate("productId", "-__v -createdAt -updatedAt -detail")
     .skip(skip)
     .limit(limit)
     .sort({ createdAt: -1 })
@@ -29,8 +29,9 @@ const getAllMenu = async ({ limit, page, keySearch, filter, select }) => {
 
 const getMenuInfo = async ({ menuId }) => {
   const menu = await Menu.findOne({ _id: menuId })
-    .populate("menuInfoId", "_id name")
     .lean();
+
+    return menu
 };
 
 export { getAllMenu, getMenuInfo };

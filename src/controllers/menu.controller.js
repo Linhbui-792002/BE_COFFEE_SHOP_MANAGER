@@ -2,6 +2,7 @@
 
 import { CREATED, OK, SuccessResponse } from "../core/success.response.js";
 import MenuService from "../services/menu.service.js";
+import { removeKeys } from "../utils/index.js";
 
 class MenuController {
   static getAllMenu = async (req, res, next) => {
@@ -22,7 +23,7 @@ class MenuController {
     new OK({
       message: "Get menu info",
       metadata: await MenuService.getMenuInfo({ menuId: req.params.id }),
-    });
+    }).send(res);
   };
 
   static createMenu = async (req, res, next) => {
