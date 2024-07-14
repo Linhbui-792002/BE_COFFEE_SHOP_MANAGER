@@ -7,6 +7,26 @@ import { findVoucher, getAllVoucher } from '../repositories/voucher.repo.js';
 
 class VoucherService {
 
+  static getVouchersProductActive= async ({
+    limit,
+    page,
+    keySearch = "",
+    filter,
+    select = ["_id","name", "code", "detail", "voucherPercent","type", "autoUse","status","productId"],
+  }) => {
+    return await getAllVoucher({ limit, page, keySearch, filter:{...filter, status:true,type:true}, select });
+  };
+
+  static getVouchersCartActive= async ({
+    limit,
+    page,
+    keySearch = "",
+    filter,
+    select = ["_id","name", "code", "detail", "voucherPercent","type", "autoUse","status"],
+  }) => {
+    return await getAllVoucher({ limit, page, keySearch, filter:{...filter, status:true,type:false}, select });
+  };
+
     static getAllVoucher= async ({
         limit = 5,
         page = 1,

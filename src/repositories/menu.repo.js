@@ -8,7 +8,6 @@ const getAllMenu = async ({ limit, page, keySearch, filter, select }) => {
     const regexSearch = new RegExp(keySearch, "i");
     searchCriteria = { ...searchCriteria, name: regexSearch };
   }
-
   const menus = await Menu.find(searchCriteria)
     .populate("menuInfoId", "_id name")
     .populate("productId", "-__v -createdAt -updatedAt -detail")
