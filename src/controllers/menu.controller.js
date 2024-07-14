@@ -5,6 +5,22 @@ import MenuService from "../services/menu.service.js";
 import { removeKeys } from "../utils/index.js";
 
 class MenuController {
+
+  static getAllMenuPublic = async (req, res, next) => {
+    const query = req.query;
+    const filter = removeKeys(query, ["limit", "page", "keySearch"]);
+    const { menus, options } = await MenuService.getAllMenuPublic({
+      ...query,
+      filter,
+    });
+    new OK({
+      message: "Get all menu public success",
+      metadata: menus,
+      options: options,
+    }).send(res);
+  };
+
+
   static getAllMenu = async (req, res, next) => {
     const query = req.query;
     const filter = removeKeys(query, ["limit", "page", "keySearch"]);

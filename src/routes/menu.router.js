@@ -11,6 +11,8 @@ const routerMenu = express.Router()
 // authentication
 routerMenu.use(asyncHandler(authentication));
 
+routerMenu.get("/getMenu/forEmployee", asyncHandler(MenuController.getAllMenuPublic))
+
 // Role admin
 routerMenu.use(asyncHandler(checkAdminRole));
 

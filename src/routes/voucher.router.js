@@ -9,6 +9,8 @@ const routerVoucher = express.Router();
 // authentication
 routerVoucher.use(asyncHandler(authentication))
 
+routerVoucher.get('/getVouchers/useProduct', asyncHandler(VoucherController.getVouchersProductActive));
+routerVoucher.get('/getVouchers/useCart', asyncHandler(VoucherController.getVouchersCartActive));
 
 
 // Role admin

@@ -17,6 +17,33 @@ class VoucherController {
           options: options,
         }).send(res);
       };
+
+      static getVouchersProductActive = async (req, res, next) => {
+        const query = req.query;
+        const filter = removeKeys(query, ["limit", "page", "keySearch"]);
+        const { vouchers, options } = await VoucherService.getVouchersProductActive({
+          ...query,
+          filter,
+        });
+        new OK({
+          message: "Get voucher product success",
+          metadata: vouchers,
+          options: options,
+        }).send(res);
+      };
+      static getVouchersCartActive = async (req, res, next) => {
+        const query = req.query;
+        const filter = removeKeys(query, ["limit", "page", "keySearch"]);
+        const { vouchers, options } = await VoucherService.getVouchersCartActive({
+          ...query,
+          filter,
+        });
+        new OK({
+          message: "Get voucher cart success",
+          metadata: vouchers,
+          options: options,
+        }).send(res);
+      };
     static getVoucherInfo = async (req, res, next) => {
         new OK({
           message: "Get voucher info",

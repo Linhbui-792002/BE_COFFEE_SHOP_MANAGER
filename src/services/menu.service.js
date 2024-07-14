@@ -8,6 +8,16 @@ import { findMenuInfo } from "../repositories/menuInfo.repo.js";
 import { findProductById } from "../repositories/product.repo.js";
 
 class MenuService {
+
+  static getAllMenuPublic = async ({
+    limit ,
+    page ,
+    keySearch = "",
+    filter ,
+    select = ["_id", "name", "menuInfoId", "productId", "status", "createdAt", "updatedAt"] }) => {
+    return await getAllMenu({ limit, page, keySearch, filter: { ...filter,status: true }, select });
+  }
+
   static getAllMenus = async ({
     limit = 5,
     page = 1,
@@ -61,7 +71,7 @@ class MenuService {
         if (!product) throw new BadRequestError(`Product ${id} not found !!!`);
       })
     );
-    
+
     return await Menu.findByIdAndUpdate(
       menuId,
       {
