@@ -1,22 +1,27 @@
-'use strict';
+"use strict";
 
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema } from "mongoose";
 
-const DOCUMENT_NAME = 'ProductCategory';
-const COLLECTION_NAME = 'ProductCategories';
+const DOCUMENT_NAME = "ProductCategory";
+const COLLECTION_NAME = "ProductCategories";
 
 const productCateSchema = new Schema(
-    {
-        name: {
-            type: String,
-            required: true,
-            trim: true,
-        }
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    {
-        timestamps: true,
-        collection: COLLECTION_NAME,
-    }
+    status: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
+  },
+  {
+    timestamps: true,
+    collection: COLLECTION_NAME,
+  }
 );
 
 //Export the model
