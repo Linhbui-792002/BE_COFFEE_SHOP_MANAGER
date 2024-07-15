@@ -26,7 +26,10 @@ app.use(
 );
 
 
-app.use(cors({ credentials: true }));
+app.use(cors({
+    origin: 'http://localhost:3000', // Replace with your frontend URL
+    credentials: true
+  }));
 //init db
 
 // checkOverLoad();

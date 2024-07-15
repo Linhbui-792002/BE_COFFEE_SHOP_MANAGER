@@ -1,22 +1,27 @@
-'use strict';
+"use strict";
 
-import mongoose, { Schema, Types } from 'mongoose';
+import mongoose, { Schema, Types } from "mongoose";
 
-const DOCUMENT_NAME = 'MenuInfo';
-const COLLECTION_NAME = 'MenuInfos';
+const DOCUMENT_NAME = "MenuInfo";
+const COLLECTION_NAME = "MenuInfos";
 
 const menuInfoSchema = new Schema(
-    {
-        name: {
-            type: String,
-            required: true,
-            trim: true,
-        }
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    {
-        timestamps: true,
-        collection: COLLECTION_NAME,
-    }
+    status: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
+  },
+  {
+    timestamps: true,
+    collection: COLLECTION_NAME,
+  }
 );
 
 //Export the model

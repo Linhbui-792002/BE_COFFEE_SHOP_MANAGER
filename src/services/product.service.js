@@ -11,7 +11,7 @@ import {
 
 class ProductService {
   static getAllProducts = async ({
-    limit = 5,
+    limit = 8,
     page = 1,
     keySearch = "",
     filter,
@@ -42,6 +42,20 @@ class ProductService {
       "image",
       "status",
       "quantity",
+    ],
+  }) => {
+    return await Product.find(filter)
+    .populate("categoryId", "_id name")
+      .sort({ createdAt: -1 })
+      .select(select)
+      .lean();
+  };
+
+  static getAllProductsPublicNotExitMenu = async ({
+    filter = { status: true },
+    select = [
+      "_id",
+      "name",
     ],
   }) => {
     return await Product.find(filter)
