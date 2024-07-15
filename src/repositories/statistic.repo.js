@@ -203,17 +203,8 @@ const revenueChartStatistic = async () => {
   };
 };
 
-const productStatistic = async () => {
-  //Đoạn này sẽ lầy thời gian đầu của tháng hiên tại và thời điểm đầu của 6 tháng trước.
-  const firstDate = new Date().setDate(1);
-  const firstMoment = new Date(firstDate).setHours(0, 0, 0, 1);
-  //Thời điểm đầu tiên của tháng hiện tại
-  const endDate = new Date(firstMoment).toISOString();
-  //Thời điểm đầu tiên của 6 tháng trước
-  const sixMonthsAgo = new Date(firstMoment).setMonth(new Date(firstMoment).getMonth() - 6);
-  const startDate = new Date(sixMonthsAgo).toISOString();
-
-  //Thực hiện query lấy dữ liệu
+const productStatistic = async (filter) => {
+  //Thực hiện query lấy dữ liệu:
   const queryDb =
     [
       {
@@ -221,11 +212,11 @@ const productStatistic = async () => {
           '$and': [
             {
               'createdAt': {
-                '$gte': new Date(startDate)
+                '$gte': new Date(filter.startFilter)
               }
             }, {
               'createdAt': {
-                '$lt': new Date(endDate)
+                '$lt': new Date(filter.endFilter)
               }
             }
           ]

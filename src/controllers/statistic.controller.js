@@ -13,7 +13,7 @@ class StatisticController {
     static StatisticProduct = async (req, res, next) => {
         new OK({
             message: "Get product statistic success",
-            metadata: await StatisticService.productStatistic() || [],
+            metadata: await StatisticService.productStatistic(req.query) || [],
         }).send(res)
     };
 
