@@ -7,10 +7,12 @@ import StatisticController from '../controllers/statistic.controller.js';
 const statisticRouter = express.Router();
 // authentication
 statisticRouter.use(asyncHandler(authentication))
-statisticRouter.get('/', asyncHandler(StatisticController.Statistic));
 
 // //Role admin
 statisticRouter.use(asyncHandler(checkAdminRole))
+statisticRouter.get('/statisticInDay', asyncHandler(StatisticController.StatisticPerDay));
+statisticRouter.get('/statisticProduct', asyncHandler(StatisticController.StatisticProduct));
+statisticRouter.get('/statisticRevenue', asyncHandler(StatisticController.StatisticRevenue));
 
 
 export default statisticRouter;

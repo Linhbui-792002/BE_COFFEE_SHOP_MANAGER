@@ -310,17 +310,7 @@ const productStatistic = async () => {
 
     ]
 
-  const dataReturn = await mongoose.model("Order").aggregate(queryDb);
-
-  if (!dataReturn || dataReturn.length === 0) {
-    return {
-      productData: dataReturn,
-      message: "No order found!",
-    };
-  }
-  return {
-    productData: dataReturn,
-  };
+  return await mongoose.model("Order").aggregate(queryDb);
 }
 
 export default { orderStatistic, revenueChartStatistic, productStatistic };
