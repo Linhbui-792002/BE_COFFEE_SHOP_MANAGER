@@ -5,9 +5,12 @@ class ProductCategoryService {
   // Query
   static getAllProductCategory = async ({
     filter = {},
-    select = ["name", "createdAt", "updatedAt"],
+    select = ["_id", "name", "status", "createdAt", "updatedAt"],
   }) => {
-    return await ProductCategory.find(filter).select(select);
+    return await ProductCategory.find(filter)
+      .sort({ createdAt: -1 })
+      .select(select)
+      .lean();
   };
 
   static getProductCategoryInfo = async (productCategoryId) => {
@@ -20,11 +23,27 @@ class ProductCategoryService {
     return getProductCategoryInfo;
   };
 
-  static updateProductCategory = async ({ productCategoryId, name }) => {
+  static getAllProductCategoryActive = async ({
+    filter = {
+      status: true,
+    },
+    select = ["_id", "name", "status", "createdAt", "updatedAt"],
+  }) => {
+    return await ProductCategory.find(filter)
+      .sort({ createdAt: -1 })
+      .select(select)
+      .lean();
+  };
+
+  static updateProductCategory = async ({
+    productCategoryId,
+    name,
+    status,
+  }) => {
     await this.getProductCategoryInfo(productCategoryId);
     return await ProductCategory.findOneAndUpdate(
       { _id: productCategoryId },
-      { name },
+      { name, status },
       { new: true }
     );
   };

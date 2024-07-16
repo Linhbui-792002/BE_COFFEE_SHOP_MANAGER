@@ -14,6 +14,11 @@ routerProductCategory.get(
 );
 
 routerProductCategory.get(
+  "/active",
+  asyncHandler(ProductCategoryController.getAllProductCategoryActive)
+);
+
+routerProductCategory.get(
   "/:id",
   asyncHandler(ProductCategoryController.getProductCategoryInfo)
 );

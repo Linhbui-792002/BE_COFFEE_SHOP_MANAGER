@@ -9,6 +9,15 @@ class ProductCategoryController {
     }).send(res);
   };
 
+  static getAllProductCategoryActive = async (req, res, next) => {
+    new OK({
+      message: "Get all product category active success",
+      metadata: await ProductCategoryService.getAllProductCategoryActive(
+        req.query
+      ),
+    }).send(res);
+  };
+
   static getProductCategoryInfo = async (req, res, next) => {
     new OK({
       message: "Get product category info success",
