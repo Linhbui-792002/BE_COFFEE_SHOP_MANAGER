@@ -233,7 +233,7 @@ const productStatistic = async (filter) => {
             '$multiply': [
               {
                 '$subtract': [
-                  '$orderDetail.costPrice', '$orderDetail.price'
+                   '$orderDetail.price', '$orderDetail.costPrice'
                 ]
               }, '$orderDetail.quantity'
             ]
