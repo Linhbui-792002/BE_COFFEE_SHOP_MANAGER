@@ -12,7 +12,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --watch server.js ",
     "dev": "nodemon server.js"
-
   },
   "keywords": [],
   "author": "LinhBui",
