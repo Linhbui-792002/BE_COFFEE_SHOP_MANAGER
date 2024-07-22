@@ -128,6 +128,18 @@ const createProduct = async ({
   });
 };
 
+const reduceProductQuantity = async (productId, quantityToReduce) => {
+
+    const product = await Product.findByIdAndUpdate(
+      productId,
+      { $inc: { quantity: - quantityToReduce } },
+      { new: true, runValidators: true }
+    );
+
+    return product;
+};
+
+
 export {
   createProduct,
   getAllProduct,
@@ -135,4 +147,5 @@ export {
   updateProduct,
   getProductInfo,
   searchProductByEmployee,
+  reduceProductQuantity
 };

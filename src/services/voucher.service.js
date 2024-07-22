@@ -12,7 +12,7 @@ class VoucherService {
     page,
     keySearch = "",
     filter,
-    select = ["_id","name", "code", "detail", "voucherPercent","type", "autoUse","status","productId"],
+    select = ["_id","name", "code", "detail", "voucherPercent","maxDiscount","type", "autoUse","status","productId"],
   }) => {
     return await getAllVoucher({ limit, page, keySearch, filter:{...filter, status:true,type:true}, select });
   };
@@ -22,7 +22,7 @@ class VoucherService {
     page,
     keySearch = "",
     filter,
-    select = ["_id","name", "code", "detail", "voucherPercent","type", "autoUse","status"],
+    select = ["_id","name", "code", "detail", "voucherPercent","maxDiscount","type", "autoUse","status"],
   }) => {
     return await getAllVoucher({ limit, page, keySearch, filter:{...filter, status:true,type:false}, select });
   };

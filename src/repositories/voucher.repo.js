@@ -32,5 +32,25 @@ const findVoucher = async({voucherId})=>{
   return voucher
   }
 
+const reduceVoucherQuantity = async (voucherId) => {
 
-export {getAllVoucher, findVoucher}
+    const voucher = await Voucher.findByIdAndUpdate(
+      voucherId,
+      { $inc: { numberVoucher: - 1 } },
+      { new: true, runValidators: true }
+    );
+
+    return voucher;
+};
+
+const isFullVoucher = async (voucherUsed)=>{
+  console.log(voucherUsed,'voucherUsed');
+  const voucher = await Voucher.findOne({ _id: voucherUsed.voucherId});
+  if(voucher && voucher.numberVoucher < voucherUsed.quantity){
+    return voucher;
+  }
+  return false
+}
+
+
+export {getAllVoucher, findVoucher, reduceVoucherQuantity,isFullVoucher}
