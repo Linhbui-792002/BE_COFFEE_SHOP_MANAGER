@@ -91,7 +91,11 @@ voucherSchema.pre('find', async function (next) {
             { startDate: { $lte: currentDate }, endDate: { $gte: currentDate } },
             { $set: { status: true } }
         );
-        console.log(`Active vouchers updated: ${resultActive.nModified}`);
+        const resultInactiveNumVoucherZero = await mongoose.model('Voucher').updateMany(
+            { numberVoucher: { $lte: 0 } },
+            { $set: { status: false } }
+        );
+        console.log(`Active vouchers updated: ${resultInactiveNumVoucherZero.nModified}`);
 
         // Update vouchers where the current date is outside the start and end dates
         const resultInactive = await mongoose.model('Voucher').updateMany(

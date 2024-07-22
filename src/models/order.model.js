@@ -14,7 +14,7 @@ const voucherUsedSchema = new Schema({
     type: Number,
     required: true,
   },
-});
+},{_id:false});
 
 const orderDetailSchema = new Schema({
   productId: {
@@ -34,7 +34,7 @@ const orderDetailSchema = new Schema({
     required: true,
   },
   voucherUsed: [voucherUsedSchema],
-});
+},{_id:false});
 
 const orderSchema = new Schema(
   {
