@@ -110,93 +110,100 @@ const revenueChartStatistic = async () => {
   //Thời điểm đầu tiên của tháng hiện tại
   const endDate = new Date(firstMoment).toISOString();
   //Thời điểm đầu tiên của 6 tháng trước
-  const sixMonthsAgo = new Date(firstMoment).setMonth(new Date(firstMoment).getMonth() - 6);
+  const sixMonthsAgo = new Date(firstMoment).setMonth(
+    new Date(firstMoment).getMonth() - 6
+  );
   const startDate = new Date(sixMonthsAgo).toISOString();
   //Thực hiện query lấy dữ liệu
   const queryDb = [
     {
-      '$match': {
-        '$and': [
+      $match: {
+        $and: [
           {
-            'createdAt': {
-              '$gte': new Date(startDate)
-            }
-          }, {
-            'createdAt': {
-              '$lt': new Date(endDate)
-            }
-          }
-        ]
-      }
-    }, {
-      '$addFields': {
-        'profit': {
-          '$reduce': {
-            'input': '$orderDetail',
-            'initialValue': 0,
-            'in': {
-              '$add': [
-                '$$value', {
-                  '$multiply': [
+            createdAt: {
+              $gte: new Date(startDate),
+            },
+          },
+          {
+            createdAt: {
+              $lt: new Date(endDate),
+            },
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        profit: {
+          $reduce: {
+            input: "$orderDetail",
+            initialValue: 0,
+            in: {
+              $add: [
+                "$$value",
+                {
+                  $multiply: [
                     {
-                      '$subtract': [
+                      $subtract: [
                         {
-                          '$max': [
-                            '$$this.costPrice', '$$this.price'
-                          ]
-                        }, {
-                          '$min': [
-                            '$$this.costPrice', '$$this.price'
-                          ]
-                        }
-                      ]
-                    }, '$$this.quantity'
-                  ]
-                }
-              ]
-            }
-          }
+                          $max: ["$$this.costPrice", "$$this.price"],
+                        },
+                        {
+                          $min: ["$$this.costPrice", "$$this.price"],
+                        },
+                      ],
+                    },
+                    "$$this.quantity",
+                  ],
+                },
+              ],
+            },
+          },
         },
-        'revenue': '$totalMoney'
-      }
-    }, {
-      '$addFields': {
-        'localTime': {
-          '$dateAdd': {
-            'startDate': '$createdAt',
-            'unit': 'month',
-            'amount': 7
-          }
+        revenue: "$totalMoney",
+      },
+    },
+    {
+      $addFields: {
+        localTime: {
+          $dateAdd: {
+            startDate: "$createdAt",
+            unit: "month",
+            amount: 7,
+          },
         },
-        'yearMonth': {
-          '$dateToString': {
-            'date': '$createdAt',
-            'format': '%m - %Y'
-          }
-        }
-      }
-    }, {
-      '$group': {
-        '_id': {
-          'date': '$yearMonth'
+        yearMonth: {
+          $dateToString: {
+            date: "$createdAt",
+            format: "%m - %Y",
+          },
         },
-        'revenue': {
-          '$sum': '$revenue'
+      },
+    },
+    {
+      $group: {
+        _id: {
+          date: "$yearMonth",
         },
-        'profit': {
-          '$sum': '$profit'
-        }
-      }
-    }, {
-      '$addFields': {
-        'month': '$_id.date'
-      }
-    }, {
-      '$sort': {
-        '_id.date': -1
-      }
-    }
-  ]
+        revenue: {
+          $sum: "$revenue",
+        },
+        profit: {
+          $sum: "$profit",
+        },
+      },
+    },
+    {
+      $addFields: {
+        month: "$_id.date",
+      },
+    },
+    {
+      $sort: {
+        "_id.date": -1,
+      },
+    },
+  ];
 
   return {
     revenueData: await mongoose.model("Order").aggregate(queryDb),
@@ -205,103 +212,105 @@ const revenueChartStatistic = async () => {
 
 const productStatistic = async (filter) => {
   //Thực hiện query lấy dữ liệu:
-  const queryDb =
-    [
-      {
-        '$match': {
-          '$and': [
-            {
-              'createdAt': {
-                '$gte': new Date(filter.startFilter)
-              }
-            }, {
-              'createdAt': {
-                '$lt': new Date(filter.endFilter)
-              }
-            }
-          ]
-        }
-      }, {
-        '$unwind': {
-          'path': '$orderDetail',
-          'preserveNullAndEmptyArrays': true
-        }
-      }, {
-        '$addFields': {
-          'productId': '$orderDetail.productId',
-          'productProfit': {
-            '$multiply': [
-              {
-                '$subtract': [
-                   '$orderDetail.price', '$orderDetail.costPrice'
-                ]
-              }, '$orderDetail.quantity'
-            ]
+  const queryDb = [
+    {
+      $match: {
+        $and: [
+          {
+            createdAt: {
+              $gte: new Date(filter.startFilter),
+            },
           },
-          'localTime': {
-            '$dateAdd': {
-              'startDate': '$createdAt',
-              'unit': 'month',
-              'amount': 7
-            }
+          {
+            createdAt: {
+              $lt: new Date(filter.endFilter),
+            },
           },
-          'yearMonth': {
-            '$dateToString': {
-              'date': '$createdAt',
-              'format': '%m - %Y'
-            }
-          }
-        }
-      }, {
-        '$group': {
-          '_id': {
-            'yearMonth': '$yearMonth',
-            'productId': '$productId'
+        ],
+      },
+    },
+    {
+      $unwind: {
+        path: "$orderDetail",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $addFields: {
+        productId: "$orderDetail.productId",
+        productProfit: {
+          $sum: "$orderDetail.quantity",
+        },
+        localTime: {
+          $dateAdd: {
+            startDate: "$createdAt",
+            unit: "month",
+            amount: 7,
           },
-          'productProfit': {
-            '$sum': '$productProfit'
-          }
-        }
-      }, {
-        '$addFields': {
-          'productId': '$_id.productId',
-          'yearMonth': '$_id.yearMonth'
-        }
-      }, {
-        '$lookup': {
-          'from': 'Products',
-          'localField': 'productId',
-          'foreignField': '_id',
-          'as': 'product'
-        }
-      }, {
-        '$addFields': {
-          'product': {
-            '$first': '$product'
-          }
-        }
-      }, {
-        '$addFields': {
-          'productName': '$product.name',
-          'status': '$product.status'
-        }
-      }, {
-        '$match': {
-          'status': {
-            '$eq': true
-          }
-        }
-      }, {
-        '$project': {
-          'productName': 1,
-          'productProfit': 1,
-          'yearMonth': 1
-        }
-      }
-
-    ]
+        },
+        yearMonth: {
+          $dateToString: {
+            date: "$createdAt",
+            format: "%m - %Y",
+          },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          yearMonth: "$yearMonth",
+          productId: "$productId",
+        },
+        productProfit: {
+          $sum: "$productProfit",
+        },
+      },
+    },
+    {
+      $addFields: {
+        productId: "$_id.productId",
+        yearMonth: "$_id.yearMonth",
+      },
+    },
+    {
+      $lookup: {
+        from: "Products",
+        localField: "productId",
+        foreignField: "_id",
+        as: "product",
+      },
+    },
+    {
+      $addFields: {
+        product: {
+          $first: "$product",
+        },
+      },
+    },
+    {
+      $addFields: {
+        productName: "$product.name",
+        status: "$product.status",
+      },
+    },
+    {
+      $match: {
+        status: {
+          $eq: true,
+        },
+      },
+    },
+    {
+      $project: {
+        productName: 1,
+        productProfit: 1,
+        yearMonth: 1,
+      },
+    },
+  ];
 
   return await mongoose.model("Order").aggregate(queryDb);
-}
+};
 
 export default { orderStatistic, revenueChartStatistic, productStatistic };
