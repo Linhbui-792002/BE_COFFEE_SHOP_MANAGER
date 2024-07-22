@@ -3,7 +3,7 @@ import Salary from "../models/salary.model.js";
 
 const getSalary = async (filter) => {
     if (filter) {
-        return await Salary.find({ ...filter }).populate('employeeId').lean();
+        return await Salary.find({ ...filter }).populate('employeeId').lean().sort({created_at: -1});
     }
 
     return await Salary.find()
